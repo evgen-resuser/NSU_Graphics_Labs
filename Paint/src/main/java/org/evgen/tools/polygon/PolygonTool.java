@@ -1,7 +1,6 @@
 package org.evgen.tools.polygon;
 
 import org.evgen.tools.line.LineDrawer;
-import org.evgen.tools.line.LineSettings;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

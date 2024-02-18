@@ -17,18 +17,30 @@ public class MainFrame extends JFrame {
 
     private final ImageIcon lineIcon = new ImageIcon(
             Objects.requireNonNull(Main.class.getClassLoader().getResource("icons/line.png")));
-    private final ImageIcon curveIcon = new ImageIcon(Objects.requireNonNull(Main.class.getClassLoader().getResource("icons/curve.png")));
-    private final ImageIcon fillIcon = new ImageIcon(Objects.requireNonNull(Main.class.getClassLoader().getResource("icons/fill.png")));
-    private final ImageIcon eraseIcon = new ImageIcon(Objects.requireNonNull(Main.class.getClassLoader().getResource("icons/erase.png")));
-    private final ImageIcon undoIcon = new ImageIcon(Objects.requireNonNull(Main.class.getClassLoader().getResource("icons/undo.png")));
-    private final ImageIcon saveIcon = new ImageIcon(Objects.requireNonNull(Main.class.getClassLoader().getResource("icons/save.png")));
-    private final ImageIcon settingsIcon = new ImageIcon(Objects.requireNonNull(Main.class.getClassLoader().getResource("icons/settings.png")));
-    private final ImageIcon triangleIcon = new ImageIcon(Objects.requireNonNull(Main.class.getClassLoader().getResource("icons/triangle.png")));
-    private final ImageIcon squareIcon = new ImageIcon(Objects.requireNonNull(Main.class.getClassLoader().getResource("icons/square.png")));
-    private final ImageIcon pentagonIcon = new ImageIcon(Objects.requireNonNull(Main.class.getClassLoader().getResource("icons/pentagon.png")));
-    private final ImageIcon polygonIcon = new ImageIcon(Objects.requireNonNull(Main.class.getClassLoader().getResource("icons/polygon.png")));
-    private final ImageIcon eraseAllIcon = new ImageIcon(Objects.requireNonNull(Main.class.getClassLoader().getResource("icons/erase.png")));
-    private final ImageIcon starIcon = new ImageIcon(Objects.requireNonNull(Main.class.getClassLoader().getResource("icons/star.png")));
+    private final ImageIcon curveIcon = new ImageIcon(
+            Objects.requireNonNull(Main.class.getClassLoader().getResource("icons/curve.png")));
+    private final ImageIcon fillIcon = new ImageIcon(
+            Objects.requireNonNull(Main.class.getClassLoader().getResource("icons/fill.png")));
+    private final ImageIcon eraseIcon = new ImageIcon(
+            Objects.requireNonNull(Main.class.getClassLoader().getResource("icons/erase.png")));
+    private final ImageIcon undoIcon = new ImageIcon(
+            Objects.requireNonNull(Main.class.getClassLoader().getResource("icons/undo.png")));
+    private final ImageIcon saveIcon = new ImageIcon(
+            Objects.requireNonNull(Main.class.getClassLoader().getResource("icons/save.png")));
+    private final ImageIcon settingsIcon = new ImageIcon(
+            Objects.requireNonNull(Main.class.getClassLoader().getResource("icons/settings.png")));
+    private final ImageIcon triangleIcon = new ImageIcon(
+            Objects.requireNonNull(Main.class.getClassLoader().getResource("icons/triangle.png")));
+    private final ImageIcon squareIcon = new ImageIcon(
+            Objects.requireNonNull(Main.class.getClassLoader().getResource("icons/square.png")));
+    private final ImageIcon pentagonIcon = new ImageIcon(
+            Objects.requireNonNull(Main.class.getClassLoader().getResource("icons/pentagon.png")));
+    private final ImageIcon polygonIcon = new ImageIcon(
+            Objects.requireNonNull(Main.class.getClassLoader().getResource("icons/polygon.png")));
+    private final ImageIcon eraseAllIcon = new ImageIcon(
+            Objects.requireNonNull(Main.class.getClassLoader().getResource("icons/eraseAll.png")));
+    private final ImageIcon starIcon = new ImageIcon(
+            Objects.requireNonNull(Main.class.getClassLoader().getResource("icons/star.png")));
 
     private final DrawPanel drawPanel = new DrawPanel();
     private final JToolBar toolBar = new JToolBar();
@@ -71,7 +83,7 @@ public class MainFrame extends JFrame {
         JButton clearAll = initButton("Erase all", eraseAllIcon);
         clearAll.addActionListener( e -> drawPanel.clearAll());
 
-        JButton settings = initButton("Settings of chosen tool", settingsIcon);
+        JButton settings = initButton("Settings of the chosen tool", settingsIcon);
         settings.addActionListener(settingsAction);
 
         JToggleButton line = initToggleButton("Straight line tool", lineIcon);
@@ -311,10 +323,12 @@ public class MainFrame extends JFrame {
     private JMenu createHelpMenu() {
         JMenu helpMenu = new JMenu("Help");
 
-        JMenuItem help = new JMenuItem("Help", new ImageIcon("src/main/resources/icons/help.png"));
+        JMenuItem help = new JMenuItem("Help",
+                new ImageIcon(Objects.requireNonNull(Main.class.getClassLoader().getResource("icons/help.png"))));
         help.addActionListener(e -> helpPageFrame.setVisible(true));
 
-        JMenuItem about = new JMenuItem("About", new ImageIcon("src/main/resources/icons/info.png"));
+        JMenuItem about = new JMenuItem("About",
+                new ImageIcon(Objects.requireNonNull(Main.class.getClassLoader().getResource("icons/info.png"))));
         about.addActionListener( e -> aboutPageFrame.setVisible(true));
 
         helpMenu.add(help);

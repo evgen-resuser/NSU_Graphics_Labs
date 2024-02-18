@@ -4,6 +4,7 @@ import org.evgen.interfaces.ColorReceiver;
 import org.evgen.gui.windows.ColorPickerFrame;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
 import java.awt.event.FocusEvent;

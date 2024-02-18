@@ -6,7 +6,7 @@ import java.awt.image.BufferedImage;
 public class LineDrawer {
 
     /**
-     * Draws a line on the given BufferedImage with the specified thickness and color, between the given start and end points.
+     * Draws a line using Bresenham's line algorithm on the given image between the specified start and end points.
      *
      * @param  image     the BufferedImage on which to draw the line
      * @param  thickness the thickness of the line
@@ -19,180 +19,57 @@ public class LineDrawer {
     }
 
     /**
-     * Draws a line on the given BufferedImage with the specified thickness and color, between the given start and end points
-     * by its coordinates.
+     * Draws a line using Bresenham's line algorithm on the given image between the specified start and end points.
      *
-     * @param  image      the image on which the line will be drawn
-     * @param  thickness  the thickness of the line
-     * @param  color      the color of the line
-     * @param  x1         the x-coordinate of the start point
-     * @param  y1         the y-coordinate of the start point
-     * @param  x2         the x-coordinate of the end point
-     * @param  y2         the y-coordinate of the end point
+     * @param  x1     the x-coordinate of the start point
+     * @param  y1     the y-coordinate of the start point
+     * @param  x2     the x-coordinate of the end point
+     * @param  y2     the y-coordinate of the end point
+     * @param  color  the color of the line
+     * @param  image  the image on which the line will be drawn
      */
     public static void drawLine(BufferedImage image, int thickness, Color color, int x1, int y1, int x2, int y2) {
-        Graphics2D g2d = (Graphics2D) image.getGraphics();
-
         if (thickness > 1) {
+            Graphics2D g2d = (Graphics2D) image.getGraphics();
             g2d.setColor(color);
             g2d.setStroke(new BasicStroke(thickness));
             g2d.drawLine(x1, y1, x2, y2);
-        } else {
-
-            // setting start point but other points will be calculated by Brezenhem algorithm
-            drawPixel(x1, y1, color, image);
-
-            int dx = Math.abs(x2 - x1);
-            int dy = Math.abs(y1 - y2);
-
-            int err = -dx;
-
-            if(dx >= dy)
-            {
-                if((x2 - x1) >= 0 && (y2 - y1) >= 0)
-                {
-                    int x = Math.min(x1, x2);
-                    int y = Math.min(y1, y2);
-
-                    for(int i = 0; i < dx; i++)
-                    {
-                        x++;
-                        err += 2*dy;
-                        if(err > 0)
-                        {
-                            y++;
-                            err -= 2*dx;
-                        }
-                        drawPixel(x, y, color, image);
+        } else{
+            int dx = Math.abs(x2 - x1);  // Calculate the change in x-coordinate
+            int dy = Math.abs(y1 - y2);  // Calculate the change in y-coordinate
+            int err = -dx;  // Initialize the error value
+            int x = x1;  // Set the initial x-coordinate
+            int y = y1;  // Set the initial y-coordinate
+            int sx = x1 < x2 ? 1 : -1;  // Set the step direction for x-coordinate
+            int sy = y1 < y2 ? 1 : -1;  // Set the step direction for y-coordinate
+            if (dx >= dy) {
+                // If the change in x-coordinate is greater than or equal to the change in y-coordinate
+                for (int i = 0; i < dx; i++) {
+                    x += sx;
+                    err += 2 * dy;  // Update the error value
+                    if (err > 0) {
+                        y += sy;  // Increment y-coordinate by the step direction for y
+                        err -= 2 * dx;
                     }
+                    drawPixel(x, y, color, image);  // Draw a pixel at the current coordinates
                 }
-                else if((x2 - x1) >= 0 && (y2 - y1) <= 0)
-                {
-                    int x = Math.min(x1, x2);
-                    int y = Math.max(y1, y2);
-
-                    for(int i = 0; i < dx; i++)
-                    {
-                        x++;
-                        err += 2*dy;
-                        if(err > 0)
-                        {
-                            y--;
-                            err -= 2*dx;
-                        }
-                        drawPixel(x, y, color, image);
+            } else {
+                // If the change in y-coordinate is greater than the change in x-coordinate
+                for (int i = 0; i < dy; i++) {
+                    y += sy;  // Increment y-coordinate by the step direction for y
+                    err += 2 * dx;  // Update the error value
+                    if (err > 0) {
+                        x += sx;  // Increment x-coordinate by the step direction for x
+                        err -= 2 * dy;  // Update the error value
                     }
-                }
-                else if ((x2 - x1) <= 0 && (y2 - y1) >= 0)
-                {
-                    int x = Math.max(x1, x2);
-                    int y = Math.min(y1, y2);
-
-                    for(int i = 0; i < dx; i++)
-                    {
-                        x--;
-                        err += 2*dy;
-                        if(err > 0)
-                        {
-                            y++;
-                            err -= 2*dx;
-                        }
-                        drawPixel(x, y, color, image);
-                    }
-                }
-                else if ((x2 - x1) <= 0 && (y2 - y1) <= 0)
-                {
-                    int x = Math.max(x1, x2);
-                    int y = Math.max(y1, y2);
-
-                    for(int i = 0; i < dx; i++)
-                    {
-                        x--;
-                        err += 2*dy;
-                        if(err > 0)
-                        {
-                            y--;
-                            err -= 2*dx;
-                        }
-                        drawPixel(x, y, color, image);
-                    }
-                }
-            }
-            else
-            {
-                if((x2 - x1) >= 0 && (y2 - y1) >= 0)
-                {
-                    int x = Math.min(x1, x2);
-                    int y = Math.min(y1, y2);
-
-                    for(int i = 0; i < dy; i++)
-                    {
-                        y++;
-                        err += 2*dx;
-                        if(err > 0)
-                        {
-                            x++;
-                            err -= 2*dy;
-                        }
-                        drawPixel(x, y, color, image);
-                    }
-                }
-                else if((x2 - x1) >= 0 && (y2 - y1) <= 0)
-                {
-                    int x = Math.min(x1, x2);
-                    int y = Math.max(y1, y2);
-
-                    for(int i = 0; i < dy; i++)
-                    {
-                        y--;
-                        err += 2*dx;
-                        if(err > 0)
-                        {
-                            x++;
-                            err -= 2*dy;
-                        }
-                        drawPixel(x, y, color, image);
-                    }
-                }
-                else if ((x2 - x1) <= 0 && (y2 - y1) >= 0)
-                {
-                    int x = Math.max(x1, x2);
-                    int y = Math.min(y1, y2);
-
-                    for(int i = 0; i < dy; i++)
-                    {
-                        y++;
-                        err += 2*dx;
-                        if(err > 0)
-                        {
-                            x--;
-                            err -= 2*dy;
-                        }
-                        drawPixel(x, y, color, image);
-                    }
-                }
-                else if ((x2 - x1) <= 0 && (y2 - y1) <= 0)
-                {
-                    int x = Math.max(x1, x2);
-                    int y = Math.max(y1, y2);
-
-                    for(int i = 0; i < dy; i++)
-                    {
-                        y--;
-                        err += 2*dx;
-                        if(err > 0)
-                        {
-                            x--;
-                            err -= 2*dy;
-                        }
-                        drawPixel(x, y, color, image);
-                    }
+                    drawPixel(x, y, color, image);  // Draw a pixel at the current coordinates
                 }
             }
         }
     }
 
-    private static void drawPixel(int x, int y, Color color, BufferedImage image) {
+
+        private static void drawPixel(int x, int y, Color color, BufferedImage image) {
         if (x < image.getWidth() && x >= 0 && y >= 0 && y < image.getHeight())
             image.setRGB(x, y, color.getRGB());
     }
