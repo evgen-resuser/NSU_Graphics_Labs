@@ -28,35 +28,35 @@ public class FillTool {
         graphics.setColor(color);
         addNewSpan(seed, oldColor);
 
-        int upperBorder = 0;
-        int bottomBorder = 0;
+        int upperXBorder = 0;
+        int bottomXBorder = 0;
         int y;
 
         while(!stack.isEmpty()) {
             Span cur = stack.pop();
             graphics.drawLine(cur.intGetX1(), cur.intGetY1(), cur.intGetX2(), cur.intGetY2());
 
-            for (int x = cur.intGetX1(); x < cur.intGetX2(); x++) {
+            for (int x = cur.intGetX1(); x <= cur.intGetX2(); x++) {
                 y = cur.intGetY1();
                 if((y - 1) >= 0 && (y + 1) < image.getHeight()) {
-                    if(x > upperBorder && (image.getRGB(x, y + 1) == oldColor)) {
+                    if(x > upperXBorder && (image.getRGB(x, y + 1) == oldColor)) {
                         addNewSpan(new Point(x, y + 1), oldColor);
-                        upperBorder = stack.peek().intGetX2();
-
+                        upperXBorder = stack.peek().intGetX2();
                     }
-                    if(x > bottomBorder && (image.getRGB(x, y - 1) == oldColor)) {
+                    if(x > bottomXBorder && (image.getRGB(x, y - 1) == oldColor)) {
                         addNewSpan(new Point(x, y - 1), oldColor);
-                        bottomBorder = stack.peek().intGetX2();
-
+                        bottomXBorder = stack.peek().intGetX2();
                     }
                 }
             }
 
-            bottomBorder = 0;
-            upperBorder = 0;
+            bottomXBorder = 0;
+            upperXBorder = 0;
         }
 
-    }    private void addNewSpan(Point seed, int oldColor){
+    }
+
+    private void addNewSpan(Point seed, int oldColor){
         Point spanStart = new Point(seed);
         while(spanStart.x > 0 && image.getRGB(spanStart.x, spanStart.y) == oldColor) {
             spanStart.x--;

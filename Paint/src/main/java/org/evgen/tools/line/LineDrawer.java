@@ -35,39 +35,36 @@ public class LineDrawer {
             g2d.setStroke(new BasicStroke(thickness));
             g2d.drawLine(x1, y1, x2, y2);
         } else{
-            int dx = Math.abs(x2 - x1);  // Calculate the change in x-coordinate
-            int dy = Math.abs(y1 - y2);  // Calculate the change in y-coordinate
-            int err = -dx;  // Initialize the error value
-            int x = x1;  // Set the initial x-coordinate
-            int y = y1;  // Set the initial y-coordinate
-            int sx = x1 < x2 ? 1 : -1;  // Set the step direction for x-coordinate
-            int sy = y1 < y2 ? 1 : -1;  // Set the step direction for y-coordinate
+            int dx = Math.abs(x2 - x1);
+            int dy = Math.abs(y1 - y2);
+            int err = -dx;
+            int x = x1;
+            int y = y1;
+            int sx = x1 < x2 ? 1 : -1;
+            int sy = y1 < y2 ? 1 : -1;
             if (dx >= dy) {
-                // If the change in x-coordinate is greater than or equal to the change in y-coordinate
                 for (int i = 0; i < dx; i++) {
                     x += sx;
-                    err += 2 * dy;  // Update the error value
+                    err += 2 * dy;
                     if (err > 0) {
-                        y += sy;  // Increment y-coordinate by the step direction for y
+                        y += sy;
                         err -= 2 * dx;
                     }
-                    drawPixel(x, y, color, image);  // Draw a pixel at the current coordinates
+                    drawPixel(x, y, color, image);
                 }
             } else {
-                // If the change in y-coordinate is greater than the change in x-coordinate
                 for (int i = 0; i < dy; i++) {
-                    y += sy;  // Increment y-coordinate by the step direction for y
-                    err += 2 * dx;  // Update the error value
+                    y += sy;
+                    err += 2 * dx;
                     if (err > 0) {
-                        x += sx;  // Increment x-coordinate by the step direction for x
-                        err -= 2 * dy;  // Update the error value
+                        x += sx;
+                        err -= 2 * dy;
                     }
-                    drawPixel(x, y, color, image);  // Draw a pixel at the current coordinates
+                    drawPixel(x, y, color, image);
                 }
             }
         }
     }
-
 
         private static void drawPixel(int x, int y, Color color, BufferedImage image) {
         if (x < image.getWidth() && x >= 0 && y >= 0 && y < image.getHeight())

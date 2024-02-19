@@ -126,10 +126,6 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         // no supported
     }
 
-    public void setPenMode(Mode penMode) {
-        this.penMode = penMode;
-    }
-
     public Mode getPenMode() {
         return penMode;
     }
@@ -188,6 +184,10 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         }
     }
 
+    public void clearHistory() {
+        history.clear();
+    }
+
     public void clearAll() {
         history.add(image.getData());
         fillWhite();
@@ -197,8 +197,8 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         return image;
     }
 
-    public void setImage(BufferedImage image) {
-        this.image = image;
-        repaint();
+    public void setImage(BufferedImage image1) {
+        this.image = image1;
+        resizeImage(image1.getWidth(), image1.getHeight());
     }
 }

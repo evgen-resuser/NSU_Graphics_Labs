@@ -3,7 +3,7 @@ package org.evgen.tools.fill;
 import java.awt.*;
 
 class Span {
-     private final Point start;
+    private final Point start;
     private final Point end;
 
      Span(Point start, Point end) {

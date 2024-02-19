@@ -18,15 +18,15 @@ public class LimitedList<T> {
         }
     }
 
-    public int size() {
-        return list.size();
-    }
-
     public T getLast() {
         if (list.isEmpty()) return null;
         T e = list.getLast();
         list.removeLast();
         return e;
+    }
+
+    public void clear() {
+        list.clear();
     }
 
 }

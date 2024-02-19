@@ -73,6 +73,16 @@ public class MainFrame extends JFrame {
         this.setVisible(true);
     }
 
+    private final JToggleButton line = initToggleButton("Straight line tool", lineIcon);
+    private final JToggleButton polygon = initToggleButton("Draw a custom polygon", polygonIcon);
+    private final JToggleButton curve = initToggleButton("Curve line tool", curveIcon);
+    private final JToggleButton fill = initToggleButton("Fill area with a color", fillIcon);
+    private final JToggleButton eraser = initToggleButton("Eraser tool", eraseIcon);
+    private final JToggleButton triangle = initToggleButton("Draw a triangle", triangleIcon);
+    private final JToggleButton square = initToggleButton("Draw a square", squareIcon);
+    private final JToggleButton pentagon = initToggleButton("Draw a pentagon", pentagonIcon);
+    private final JToggleButton star = initToggleButton("Draw a custom star", starIcon);
+
     private void initToolBar(){
 
         toolBar.setFloatable(false);
@@ -85,16 +95,6 @@ public class MainFrame extends JFrame {
 
         JButton settings = initButton("Settings of the chosen tool", settingsIcon);
         settings.addActionListener(settingsAction);
-
-        JToggleButton line = initToggleButton("Straight line tool", lineIcon);
-        JToggleButton polygon = initToggleButton("Draw a custom polygon", polygonIcon);
-        JToggleButton curve = initToggleButton("Curve line tool", curveIcon);
-        JToggleButton fill = initToggleButton("Fill area with a color", fillIcon);
-        JToggleButton eraser = initToggleButton("Eraser tool", eraseIcon);
-        JToggleButton triangle = initToggleButton("Draw a triangle", triangleIcon);
-        JToggleButton square = initToggleButton("Draw a square", squareIcon);
-        JToggleButton pentagon = initToggleButton("Draw a pentagon", pentagonIcon);
-        JToggleButton star = initToggleButton("Draw a custom star", starIcon);
 
         JToggleButton red = new JToggleButton("    ");
         red.setSelected(true);
@@ -117,18 +117,32 @@ public class MainFrame extends JFrame {
         blue.addActionListener(new ColorListener(Color.BLUE));
         black.addActionListener(new ColorListener(Color.BLACK));
 
-        line.addActionListener(e -> drawPanel.switchDrawing(Mode.LINE));
+        line.addActionListener(e -> {
+            drawPanel.switchDrawing(Mode.LINE);
+            lineM.setSelected(true);
+        });
         line.setSelected(true);
+        lineM.setSelected(true);
 
         polygon.addActionListener(polyAction);
+        polygon.addActionListener(e -> poly.setSelected(true));
 
         star.addActionListener(starAction);
 
-        curve.addActionListener(e -> drawPanel.switchDrawing(Mode.CURVE));
+        curve.addActionListener(e -> {
+            drawPanel.switchDrawing(Mode.CURVE);
+            curveM.setSelected(true);
+        });
 
-        fill.addActionListener(e -> drawPanel.switchDrawing(Mode.FILL));
+        fill.addActionListener(e -> {
+            drawPanel.switchDrawing(Mode.FILL);
+            fillM.setSelected(true);
+        });
 
-        eraser.addActionListener(e -> drawPanel.switchErase());
+        eraser.addActionListener(e -> {
+            drawPanel.switchErase();
+            eraseM.setSelected(true);
+        });
 
         triangle.addActionListener(new ShapeAction(3));
         square.addActionListener(new ShapeAction(4));
@@ -228,8 +242,10 @@ public class MainFrame extends JFrame {
         return b;
     }
 
+    private final JMenuBar menuBar = new JMenuBar();
+
     private void  initMenu() {
-        JMenuBar menuBar = new JMenuBar();
+
         this.setJMenuBar(menuBar);
         menuBar.setVisible(true);
         menuBar.add(createFileMenu());
@@ -266,54 +282,93 @@ public class MainFrame extends JFrame {
         }
     }
 
+
+    private final JMenuItem lineM = new JRadioButtonMenuItem("Line");
+    private final JMenuItem curveM = new JRadioButtonMenuItem("Curve");
+    private final JMenuItem fillM = new JRadioButtonMenuItem("Fill");
+    private final JMenuItem eraseM = new JRadioButtonMenuItem("Erase");
+    private final JMenuItem tri = new JRadioButtonMenuItem("Triangle");
+    private final JMenuItem squ = new JRadioButtonMenuItem("Square");
+    private final JMenuItem penta = new JRadioButtonMenuItem("Pentagon");
+    private final JMenuItem poly = new JRadioButtonMenuItem("Custom Polygon");
+    private final JMenuItem starM = new JRadioButtonMenuItem("Star");
+
+
     private JMenu createEditMenu() {
         JMenu edit = new JMenu("Edit");
 
         JMenuItem tools = new JMenu("Tools");
 
-        JMenuItem line = new JMenuItem("Line");
-        tools.add(line);
-        line.addActionListener(e -> drawPanel.switchDrawing(Mode.LINE));
+        ButtonGroup group = new ButtonGroup();
 
-        JMenuItem curve = new JMenuItem("Curve");
-        tools.add(curve);
-        curve.addActionListener(e -> drawPanel.switchDrawing(Mode.CURVE));
+        tools.add(lineM);
+        group.add(lineM);
+        lineM.addActionListener(e -> {
+            drawPanel.switchDrawing(Mode.LINE);
+            this.line.setSelected(true);
+        });
 
-        JMenuItem fill = new JMenuItem("Fill");
-        tools.add(fill);
-        fill.addActionListener(e -> drawPanel.switchDrawing(Mode.FILL));
+        tools.add(curveM);
+        group.add(curveM);
 
-        JMenuItem erase = new JMenuItem("Erase");
-        tools.add(erase);
-        erase.addActionListener(e -> drawPanel.switchErase());
+        curveM.addActionListener(e -> {
+            drawPanel.switchDrawing(Mode.CURVE);
+            this.curve.setSelected(true);
+        });
+
+        tools.add(fillM);
+        group.add(fillM);
+
+        fillM.addActionListener(e -> {
+            drawPanel.switchDrawing(Mode.FILL);
+            this.fill.setSelected(true);
+        });
+
+        tools.add(eraseM);
+        group.add(eraseM);
+
+        eraseM.addActionListener(e -> {
+            drawPanel.switchErase();
+            this.eraser.setSelected(true);
+        });
 
         JMenuItem shapes = new JMenu("Shapes");
 
-        JMenuItem tri = new JMenuItem("Triangle");
+
         shapes.add(tri);
+        group.add(tri);
         tri.addActionListener(new ShapeAction(3));
+        tri.addActionListener(e -> triangle.setSelected(true));
 
-        JMenuItem squ = new JMenuItem("Square");
+
         shapes.add(squ);
+        group.add(squ);
         squ.addActionListener(new ShapeAction(4));
+        squ.addActionListener(e -> square.setSelected(true));
 
-        JMenuItem penta = new JMenuItem("Pentagon");
+
         shapes.add(penta);
+        group.add(penta);
         penta.addActionListener(new ShapeAction(5));
+        penta.addActionListener(e -> pentagon.setSelected(true));
 
-        JMenuItem poly = new JMenuItem("Custom Polygon");
+
         shapes.add(poly);
+        group.add(poly);
         poly.addActionListener(polyAction);
+        poly.addActionListener(e -> polygon.setSelected(true));
 
-        JMenuItem star = new JMenuItem("Star");
-        star.addActionListener(starAction);
+
+        starM.addActionListener(starAction);
+        starM.addActionListener(e -> this.star.setSelected(true));
+        group.add(starM);
 
         JMenuItem settings = new JMenuItem("Settings", settingsIcon);
         settings.addActionListener(settingsAction);
 
         edit.add(tools);
         edit.add(shapes);
-        edit.add(star);
+        edit.add(starM);
         edit.addSeparator();
         edit.add(settings);
 
@@ -356,6 +411,7 @@ public class MainFrame extends JFrame {
         public void actionPerformed(ActionEvent e) {
             drawPanel.switchDrawing(Mode.STAR);
             starSettingsFrame.applySettings();
+            starM.setSelected(true);
         }
     };
 
@@ -365,7 +421,7 @@ public class MainFrame extends JFrame {
             switch (drawPanel.getPenMode()) {
                 case LINE, CURVE -> lineSettingsFrame.setVisible(true);
                 case FILL -> {
-                    //no support
+                    //no
                 }
                 case POLYGON -> polygonSettingsFrame.setVisible(true);
                 case SHAPE -> shapeSettingsFrame.setVisible(true);
@@ -386,6 +442,24 @@ public class MainFrame extends JFrame {
             shapeSettingsFrame.setCount(count);
             shapeSettingsFrame.applySettings();
             drawPanel.switchDrawing(Mode.SHAPE);
+
+            switch (count) {
+                case 3: {
+                    tri.setSelected(true);
+                    return;
+                }
+                case 4: {
+                    squ.setSelected(true);
+                    return;
+                }
+                case 5: {
+                    penta.setSelected(true);
+                    return;
+                }
+                default: poly.setSelected(true);
+            }
         }
     }
+
+
 }

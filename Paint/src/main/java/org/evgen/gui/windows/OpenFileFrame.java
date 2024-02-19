@@ -25,15 +25,15 @@ public class OpenFileFrame {
         dialog.setVisible(true);
         String file = dialog.getDirectory()+dialog.getFile();
 
+        if (dialog.getFile() == null) return;
         try {
+
             image = ImageIO.read(new File(file));
             panel.setImage(image);
+            panel.clearHistory();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(panel, "Error while opening occurred!\n"+e.getLocalizedMessage(),
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
-
     }
-
-
 }
