@@ -1,11 +1,11 @@
 package org.evgen.instruments;
 
 
-import java.awt.*;
+import org.evgen.instruments.interfaces.IInstrument;
+
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
-import java.awt.image.BufferedImageOp;
 
 public class FitImage implements IInstrument {
 
@@ -20,7 +20,9 @@ public class FitImage implements IInstrument {
     }
 
     @Override
-    public BufferedImage apply(BufferedImage image) {
+    public BufferedImage apply(BufferedImage image) { //todo fix fit after filter applying
+        if (image == null) return null;
+
         int originalWidth = image.getWidth();
         int originalHeight = image.getHeight();
         double scaleX = (double)w / originalWidth;
@@ -28,7 +30,7 @@ public class FitImage implements IInstrument {
         double scale = Math.min(scaleX, scaleY);
 
         AffineTransform at = AffineTransform.getScaleInstance(scale, scale);
-        AffineTransformOp op = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
+        AffineTransformOp op = new AffineTransformOp(at, type);
 
         return op.filter(image, null);
     }

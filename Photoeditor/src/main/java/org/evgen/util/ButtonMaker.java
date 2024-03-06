@@ -1,4 +1,4 @@
-package org.evgen.view.components;
+package org.evgen.util;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;

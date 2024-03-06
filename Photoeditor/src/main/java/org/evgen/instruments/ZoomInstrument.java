@@ -1,9 +1,11 @@
 package org.evgen.instruments;
 
+import org.evgen.instruments.interfaces.IInstrument;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class ZoomInstrument implements IInstrument{
+public class ZoomInstrument implements IInstrument {
 
     private int percent = 100;
     private int h;
@@ -15,11 +17,17 @@ public class ZoomInstrument implements IInstrument{
         this.h = h;
     }
 
+    int newWidth;
+    int newHeight;
+
+
     @Override
     public BufferedImage apply(BufferedImage image) {
 
-        int newWidth = (w * percent) / 100;
-        int newHeight = (h * percent) / 100;
+        if (image == null) return null;
+
+        newWidth = (w * percent) / 100;
+        newHeight = (h * percent) / 100;
 
         BufferedImage newImage = new BufferedImage(newWidth, newHeight, image.getType());
         Graphics2D g = newImage.createGraphics();
@@ -28,5 +36,13 @@ public class ZoomInstrument implements IInstrument{
                 0, 0, image.getWidth(), image.getHeight(), null);
 
         return newImage;
+    }
+
+    public int getNewW() {
+        return newWidth;
+    }
+
+    public int getNewH() {
+        return newHeight;
     }
 }

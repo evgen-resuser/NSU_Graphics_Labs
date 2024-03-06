@@ -1,0 +1,56 @@
+package org.evgen.instruments.filters;
+
+import org.evgen.instruments.interfaces.IFilter;
+import org.evgen.instruments.interfaces.IFilterSettings;
+import org.evgen.util.ColorUtil;
+
+import java.awt.image.BufferedImage;
+
+public class Embossing implements IFilter {
+
+    private static final int[][] KERNEL =
+                    {{0, -1, 0},
+                    {1, 0, -1},
+                    {0, 1, 0}};
+
+    @Override
+    public BufferedImage apply(BufferedImage image) {
+        BufferedImage newImage = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
+
+        for (int x = 0; x < image.getWidth(); x++) {
+            for (int y = 0; y < image.getHeight(); y++) {
+                int red1 = 0;
+                int green1 = 0;
+                int blue1 = 0;
+                int xx, yy;
+                int curColor;
+
+                for(int kernelX = -1; kernelX <= 1; kernelX++) {
+                    for(int kernelY = -1; kernelY <= 1; kernelY++) {
+                        xx = x + kernelX;
+                        yy = y + kernelY;
+                        if (xx <= 0 || xx >= image.getWidth() || yy <= 0 || yy >= image.getHeight())
+                            curColor = image.getRGB(x, y);
+                        else curColor = image.getRGB(xx, yy);
+
+                        red1 += ColorUtil.getRed(curColor) * KERNEL[kernelX + 1][kernelY + 1];
+                        green1 += ColorUtil.getGreen(curColor) * KERNEL[kernelX + 1][kernelY + 1];
+                        blue1 += ColorUtil.getBlue(curColor) * KERNEL[kernelX + 1][kernelY + 1];
+                    }
+                }
+
+                red1 = Math.max(Math.min(red1 + 128, 255), 0);
+                green1 = Math.max(Math.min(green1 + 128, 255), 0);
+                blue1 = Math.max(Math.min(blue1 + 128, 255), 0);
+
+                newImage.setRGB(x, y, ColorUtil.getColor(red1, green1, blue1));
+            }
+        }
+        return newImage;
+    }
+
+    @Override
+    public void setParams(IFilterSettings params) {
+        //no params
+    }
+}
