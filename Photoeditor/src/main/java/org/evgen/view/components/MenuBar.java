@@ -130,6 +130,7 @@ public class MenuBar extends JMenuBar {
         filters.add(initEditableFilter("Gamma Correction", "Gamma", new GammaSettingsFrame()));
         filters.add(initEditableFilter("Floyd-Steinberg Dithering", "FloydSteinberg", new DitheringSettingsFrame()));
         filters.add(initEditableFilter("Ordered Dithering", "Ordered", new DitheringSettingsFrame()));
+        filters.add(initEditableFilter("Contouring filter", "Contouring", new ContouringSettings()));
 
         JMenuItem watercolors = new JMenuItem("Watercolor filter");
         watercolors.addActionListener(e -> workPanel.applyFilter("Watercolor"));

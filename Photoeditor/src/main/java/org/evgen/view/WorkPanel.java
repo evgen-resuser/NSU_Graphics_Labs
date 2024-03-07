@@ -5,7 +5,6 @@ import org.evgen.instruments.FitImage;
 import org.evgen.instruments.ZoomInstrument;
 import org.evgen.instruments.interfaces.IFilter;
 import org.evgen.instruments.interfaces.IFilterSettings;
-import org.evgen.view.windows.ISettings;
 
 import javax.swing.*;
 import java.awt.*;
@@ -62,10 +61,6 @@ public class WorkPanel extends JPanel implements MouseListener, MouseMotionListe
 
         scrollPane.revalidate();
         repaint();
-    }
-
-    public BufferedImage getOriginal() {
-        return original;
     }
 
     public BufferedImage getFiltered() {

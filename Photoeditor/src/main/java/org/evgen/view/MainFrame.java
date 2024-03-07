@@ -180,12 +180,15 @@ public class MainFrame extends JFrame{
             boolean isSaved = workPanel.isSaved(name);
             if (e.getButton() == MouseEvent.BUTTON3 || !isSaved) {
                 workPanel.saveSettings(name, settings.showWindow());
-            }
-
-            if (settings.getState() == JOptionPane.OK_OPTION || isSaved) {
+                if (settings.getState() == JOptionPane.OK_OPTION) {
+                    zoomBar.setDefaults();
+                    workPanel.applyFilter(name);
+                }
+            } else {
                 zoomBar.setDefaults();
                 workPanel.applyFilter(name);
             }
+
         }
     }
 }
