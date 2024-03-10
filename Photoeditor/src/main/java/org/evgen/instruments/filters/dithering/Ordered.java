@@ -17,9 +17,10 @@ public class Ordered implements IFilter {
             {0, 2},
             {3, 1}
     };
-    private double[][] bayersMatrix;
 
-    private int[] redShades, greenShades, blueShades;
+    private int[] redShades;
+    private int[] greenShades;
+    private int[] blueShades;
     private int matrixSize;
 
     private void initPalettes() {
@@ -120,7 +121,7 @@ public class Ordered implements IFilter {
         graphics2D.drawImage(image, null, 0, 0);
 
         matrixSize = getMatrixSize();
-        bayersMatrix = calculateMatrix(matrixSize);
+        double[][] bayersMatrix = calculateMatrix(matrixSize);
 
         initPalettes();
 

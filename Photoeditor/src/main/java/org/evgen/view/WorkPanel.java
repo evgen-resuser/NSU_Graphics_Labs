@@ -5,6 +5,7 @@ import org.evgen.instruments.FitImage;
 import org.evgen.instruments.ZoomInstrument;
 import org.evgen.instruments.interfaces.IFilter;
 import org.evgen.instruments.interfaces.IFilterSettings;
+import org.evgen.instruments.Rotate;
 
 import javax.swing.*;
 import java.awt.*;
@@ -59,7 +60,6 @@ public class WorkPanel extends JPanel implements MouseListener, MouseMotionListe
 
         showFiltered = false;
 
-        scrollPane.revalidate();
         repaint();
     }
 
@@ -76,68 +76,77 @@ public class WorkPanel extends JPanel implements MouseListener, MouseMotionListe
 
         fitOriginal = original;
         fitFiltered = filtered;
+
         setPreferredSize(new Dimension(width, height));
         repaint();
     }
 
+    private final FitImage fit = new FitImage();
     public void fitPic(int type) {
-        if(original != null) {
-            int w = scrollPane.getHorizontalScrollBar().getWidth();
-            int h = scrollPane.getVerticalScrollBar().getHeight();
 
-            if (w <= 0) w = scrollPane.getWidth();
-            if (h <= 0) h = scrollPane.getHeight();
-
-            setPreferredSize(new Dimension(w, h));
-
-            FitImage fit = (FitImage) instruments.getInstrumentByName("FitToScreen");
-            fit.setSettings(type, w, h);
-
-            fitOriginal = fit.apply(original);
-            fitFiltered = fit.apply(filtered);
-
-            repaint();
-        } else {
+        if (original == null) {
             JOptionPane.showMessageDialog(this, "Image has not been selected!",
                     "Error", JOptionPane.QUESTION_MESSAGE);
+            return;
         }
+
+        int w = scrollPane.getHorizontalScrollBar().getWidth();
+        int h = scrollPane.getVerticalScrollBar().getHeight();
+
+        if (w <= 0) w = scrollPane.getWidth();
+        if (h <= 0) h = scrollPane.getHeight();
+
+        setPreferredSize(new Dimension(w, h));
+
+        fit.setSettings(type, w, h);
+
+        fitOriginal = fit.apply(original);
+        fitFiltered = fit.apply(filtered);
+
+        repaint();
     }
 
+    private final ZoomInstrument zoom = new ZoomInstrument();
     public void zoomBySpinner(int value) {
 
         if (original == null) return;
 
-        ZoomInstrument zoom = (ZoomInstrument) instruments.getInstrumentByName("Zoom");
+        int newH, newHf = 0, newW, newWf = 0;
+
         zoom.setParams(value, original.getWidth(), original.getHeight());
-
-        fitFiltered = zoom.apply(filtered);
         fitOriginal = zoom.apply(original);
+        newH = zoom.getNewH();
+        newW = zoom.getNewW();
 
-        setPreferredSize(new Dimension(zoom.getNewW(), zoom.getNewH()));
+        if (filtered != null) {
+            zoom.setParams(value, filtered.getWidth(), filtered.getHeight());
+            fitFiltered = zoom.apply(filtered);
+            newHf = zoom.getNewH();
+            newWf = zoom.getNewW();
+        }
+
+        if (showFiltered) setPreferredSize(new Dimension(newWf, newHf));
+        else setPreferredSize(new Dimension(newW, newH));
 
         repaint();
     }
 
+    private final Rotate rotate = new Rotate();
     public void rotatePic(int angle) {
+        if (original == null) return;
+
+        rotate.setAngle(angle);
+        filtered = rotate.apply(original);
+        fitFiltered = filtered;
+        showFiltered = true;
+
+        setPreferredSize(new Dimension(filtered.getWidth(), filtered.getHeight()));
+
+        repaint();
 
     }
 
     private final HashMap<String, IFilterSettings> savedSettings = new HashMap<>();
-    public void applyFilter(String name, IFilterSettings settings) {
-
-        if (original == null) return;
-
-        IFilter filter = instruments.getFilterByName(name);
-        filter.setParams(settings);
-        savedSettings.put(name, settings);
-
-        filtered = filter.apply(original);
-        fitFiltered = filtered;
-        showFiltered = true;
-
-        repaint();
-    }
-
     public void applyFilter(String name) {
 
         if (original == null) return;
@@ -151,6 +160,8 @@ public class WorkPanel extends JPanel implements MouseListener, MouseMotionListe
         filtered = filter.apply(original);
         fitFiltered = filtered;
         showFiltered = true;
+
+        zoomBySpinner(100);
 
         repaint();
     }
@@ -167,6 +178,7 @@ public class WorkPanel extends JPanel implements MouseListener, MouseMotionListe
     public void switchMode() {
         if (filtered == null) return;
         showFiltered = !showFiltered;
+
         repaint();
     }
 
@@ -175,7 +187,6 @@ public class WorkPanel extends JPanel implements MouseListener, MouseMotionListe
     @Override
     public void paintComponent(Graphics g) {
         scrollPane.revalidate();
-
         super.paintComponent(g);
 
         if(!showFiltered) {

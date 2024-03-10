@@ -113,29 +113,20 @@ public class MainFrame extends JFrame{
         toolBar.add(createButton("WhiteBlack", "Apply white/black filter",
                 IconsHandler.WHITE_BLACK, null));
 
-        JButton inversion =
-                ButtonMaker.initButton("Invert colors", IconsHandler.INVERSION);
-        inversion.addActionListener(e -> workPanel.applyFilter("Inversion", null));
-        toolBar.add(inversion);
+        toolBar.add(createButton("Inversion", "Invert colors",
+                IconsHandler.INVERSION, null));
 
-        JButton gaussian =
-                ButtonMaker.initButton("Gaussian blur", IconsHandler.GAUSSIAN);
-        gaussian.addMouseListener(new ButtonListener("Gaussian", new GaussianSettingsFrame()));
-        toolBar.add(gaussian);
+        toolBar.add(createButton("Gaussian", "Gaussian blur",
+                IconsHandler.GAUSSIAN, new GaussianSettingsFrame()));
 
-        JButton sharpening =
-                ButtonMaker.initButton("Sharpen tool", IconsHandler.SHARPENING);
-        sharpening.addActionListener(e -> workPanel.applyFilter("Sharpening", null));
-        toolBar.add(sharpening);
+        toolBar.add(createButton("Sharpening", "Sharpening tool",
+                IconsHandler.SHARPENING, null));
 
-        JButton embossing =
-                ButtonMaker.initButton("Embossing effect", IconsHandler.EMBOSSING);
-        embossing.addActionListener(e -> workPanel.applyFilter("Embossing", null));
-        toolBar.add(embossing);
+        toolBar.add(createButton("Embossing", "Embossing effect",
+                IconsHandler.EMBOSSING, null));
 
-        JButton gamma = ButtonMaker.initButton("Gamma correction", IconsHandler.GAMMA);
-        gamma.addMouseListener(new ButtonListener("Gamma", new GammaSettingsFrame()));
-        toolBar.add(gamma); //todo replace this
+        toolBar.add(createButton("Gamma", "Gamma correction",
+                IconsHandler.GAMMA, new GammaSettingsFrame()));
 
         toolBar.add(createButton("FloydSteinberg", "Floyd-Steinberg dithering tool",
                 IconsHandler.DITHERING_ROUND, new DitheringSettingsFrame()));

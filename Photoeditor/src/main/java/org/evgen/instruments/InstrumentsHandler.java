@@ -5,24 +5,17 @@ import org.evgen.instruments.filters.contouring.Contouring;
 import org.evgen.instruments.filters.dithering.FloydSteinbergDithering;
 import org.evgen.instruments.filters.dithering.Ordered;
 import org.evgen.instruments.interfaces.IFilter;
-import org.evgen.instruments.interfaces.IInstrument;
 import org.evgen.instruments.filters.gamma.Gamma;
 import org.evgen.instruments.filters.gaussian.Gaussian;
-import org.evgen.instruments.rotate.Rotate;
 
+import javax.swing.*;
 import java.util.HashMap;
 
 public class InstrumentsHandler {
 
     private final HashMap<String, IFilter> filterMap = new HashMap<>();
-    private final HashMap<String, IInstrument> instrumentMap = new HashMap<>();
 
     public InstrumentsHandler() {
-
-        instrumentMap.put("FitToScreen", new FitImage());
-        instrumentMap.put("Zoom", new ZoomInstrument());
-        instrumentMap.put("Rotate", new Rotate());
-
         filterMap.put("WhiteBlack", new WhiteBlackFilter());
         filterMap.put("Inversion", new Inversion());
         filterMap.put("Gaussian", new Gaussian());
@@ -38,16 +31,9 @@ public class InstrumentsHandler {
 
     public IFilter getFilterByName(String name) throws IllegalArgumentException{
         if (!filterMap.containsKey(name)) {
+            JOptionPane.showMessageDialog(null, "Error", "No such filter", JOptionPane.ERROR_MESSAGE);
             throw new IllegalArgumentException("No such filter!");
         }
         return filterMap.get(name);
     }
-
-    public IInstrument getInstrumentByName(String name) throws IllegalArgumentException{
-        if (!instrumentMap.containsKey(name)) {
-            throw new IllegalArgumentException("No such instrument!");
-        }
-        return instrumentMap.get(name);
-    }
-
 }

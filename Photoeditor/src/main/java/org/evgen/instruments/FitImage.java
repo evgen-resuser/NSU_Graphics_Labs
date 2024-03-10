@@ -20,7 +20,7 @@ public class FitImage implements IInstrument {
     }
 
     @Override
-    public BufferedImage apply(BufferedImage image) { //todo fix fit after filter applying
+    public BufferedImage apply(BufferedImage image) {
         if (image == null) return null;
 
         int originalWidth = image.getWidth();

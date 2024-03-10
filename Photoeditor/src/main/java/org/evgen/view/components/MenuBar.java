@@ -111,19 +111,19 @@ public class MenuBar extends JMenuBar {
         JMenu filters = new JMenu("Filters");
 
         JMenuItem whBlButton = new JMenuItem("White-Black filter");
-        whBlButton.addActionListener(e -> workPanel.applyFilter("WhiteBlack", null));
+        whBlButton.addActionListener(e -> workPanel.applyFilter("WhiteBlack"));
         filters.add(whBlButton);
 
         JMenuItem inversion = new JMenuItem("Invert colors");
-        inversion.addActionListener(e -> workPanel.applyFilter("Inversion", null));
+        inversion.addActionListener(e -> workPanel.applyFilter("Inversion"));
         filters.add(inversion);
 
         JMenuItem sharpening = new JMenuItem("Sharpen image");
-        sharpening.addActionListener(e -> workPanel.applyFilter("Sharpening", null));
+        sharpening.addActionListener(e -> workPanel.applyFilter("Sharpening"));
         filters.add(sharpening);
 
         JMenuItem embossing = new JMenuItem("Embossing filter");
-        embossing.addActionListener(e -> workPanel.applyFilter("Embossing", null));
+        embossing.addActionListener(e -> workPanel.applyFilter("Embossing"));
         filters.add(embossing);
 
         filters.add(initEditableFilter("Gaussian Blur", "Gaussian", new GaussianSettingsFrame()));
