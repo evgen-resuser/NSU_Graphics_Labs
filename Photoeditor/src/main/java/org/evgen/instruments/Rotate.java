@@ -15,14 +15,11 @@ public class Rotate implements IInstrument {
         int w = image.getWidth();
         int h = image.getHeight();
 
-        //double radians = angle * (Math.PI / 180);
-        double radians = Math.toRadians(angle);
+        double radians = angle * (Math.PI / 180);
 
         double sin = Math.sin(radians);
         double cos = Math.cos(radians);
 
-        int offsetX = w / 2;
-        int offsetY = h / 2;
 
         int newH = (int) (image.getWidth()*Math.abs(sin) + image.getHeight()*Math.abs(cos));
         int newW = (int) (image.getWidth()*Math.abs(cos) + image.getHeight()*Math.abs(sin));

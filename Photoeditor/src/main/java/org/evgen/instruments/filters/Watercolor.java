@@ -10,7 +10,7 @@ import java.util.Arrays;
 public class Watercolor implements IFilter {
 
     private static final int MEDIAN_SIZE = 25;
-    private static final int MEDIAN_INDEX = 13;
+    private static final int MEDIAN_INDEX = 12;
 
     private int median(BufferedImage image, int x, int y) {
         int[] redArr = new int[MEDIAN_SIZE];
@@ -30,14 +30,9 @@ public class Watercolor implements IFilter {
 
                 if (xx < 0 || xx >= w || yy < 0 || yy >= h) {
                     color = image.getRGB(x, y);
-                    redArr[indx] = ColorUtil.getRed(color);
-                    greenArr[indx] = ColorUtil.getGreen(color);
-                    blueArr[indx] = ColorUtil.getBlue(color);
-                    indx++;
-                    continue;
-                }
+                } else
+                    color = image.getRGB(xx, yy);
 
-                color = image.getRGB(xx, yy);
                 redArr[indx] = ColorUtil.getRed(color);
                 greenArr[indx] = ColorUtil.getGreen(color);
                 blueArr[indx] = ColorUtil.getBlue(color);

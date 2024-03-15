@@ -21,7 +21,7 @@ public class ContouringSettings implements ISettings{
         group.add(roberts);
         group.add(sobel);
 
-        IntInput param = new IntInput(1, 255, 100, 5, 1, "Parameter: ");
+        IntInput param = new IntInput(1, 255, 100, 5, 1, "Threshold parameter: ");
 
         Object[] inputs = {roberts, sobel, param};
 

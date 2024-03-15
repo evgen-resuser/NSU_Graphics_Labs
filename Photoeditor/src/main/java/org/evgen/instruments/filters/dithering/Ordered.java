@@ -44,17 +44,25 @@ public class Ordered implements IFilter {
     }
 
     private int findClosest(int[] shades, int color) {
-        int indx = 0;
-        int min = 256;
+//        int indx = 0;
+//        int min = 256;
+//
+//        for (int i = 0; i < shades.length; i++) {
+//            if(Math.abs(shades[i] - color) < min) {
+//                min = Math.abs(shades[i] - color);
+//                indx = i;
+//            }
+//        }
 
-        for (int i = 0; i < shades.length; i++) {
-            if(Math.abs(shades[i] - color) < min) {
-                min = Math.abs(shades[i] - color);
-                indx = i;
-            }
-        }
+        int step = (256 / (shades.length - 1));
+        int indx = color / step;
+        int res;
 
-        return shades[indx];
+        if (indx + 1 < shades.length && (color - shades[indx] > shades[indx+1] - color)) {
+            res = indx + 1;
+        } else res = indx;
+
+        return shades[res];
     }
 
     private int getMatrixSize() {

@@ -51,6 +51,15 @@ public class MenuBar extends JMenuBar {
 
         ButtonGroup types = new ButtonGroup();
 
+        JRadioButton nearest = new JRadioButton("Nearest Neighbour");
+        nearest.addActionListener(e -> {
+            zoomPanel.setType(1);
+            lastType = 1;
+        });
+        fitModes.add(nearest);
+        types.add(nearest);
+        nearest.setSelected(false);
+
         JRadioButton bilinear = new JRadioButton("Bilinear");
         bilinear.addActionListener(e -> {
             zoomPanel.setType(2);

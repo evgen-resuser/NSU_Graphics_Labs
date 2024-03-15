@@ -112,17 +112,24 @@ public class FloydSteinbergDithering implements IFilter {
     }
 
     private int findClosest(int[] shades, int color) {
-        int indx = 0;
-        int min = 256;
+//        int indx = 0;
+//        int min = 256;
+//        for (int i = 0; i < shades.length; i++) {
+//            if(Math.abs(shades[i] - color) < min) {
+//                min = Math.abs(shades[i] - color);
+//                indx = i;
+//            }
+//        }
 
-        for (int i = 0; i < shades.length; i++) {
-            if(Math.abs(shades[i] - color) < min) {
-                min = Math.abs(shades[i] - color);
-                indx = i;
-            }
-        }
+        int step = (256 / (shades.length - 1));
+        int indx1 = color / step;
+        int res;
 
-        return shades[indx];
+        if (indx1 + 1 < shades.length && (color - shades[indx1] > shades[indx1+1] - color)) {
+            res = indx1 + 1;
+        } else res = indx1;
+
+        return shades[res];
     }
 
 
