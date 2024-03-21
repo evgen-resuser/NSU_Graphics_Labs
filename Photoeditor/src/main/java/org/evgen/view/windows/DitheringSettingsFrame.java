@@ -10,24 +10,36 @@ import java.awt.*;
 public class DitheringSettingsFrame implements ISettings {
 
     private int option;
+    private final IntInput red = new IntInput(2, 128, 8, 1, 1, "Red    ");
+    private final IntInput green = new IntInput(2, 128, 8, 1, 1, "Green");
+    private final IntInput blue = new IntInput(2, 128, 8, 1, 1, "Blue   ");
+
+    private int prevR = 8;
+    private int prevG = 8;
+    private int prevB = 8;
+
+    public DitheringSettingsFrame() {
+        red.setColor(Color.RED);
+        green.setColor(Color.GREEN);
+        blue.setColor(Color.BLUE);
+    }
 
     @Override
     public IFilterSettings showWindow() {
 
-        IntInput red = new IntInput(2, 128, 8, 1, 1, "Red    ");
-        red.setColor(Color.RED);
-        IntInput green = new IntInput(2, 128, 8, 1, 1, "Green");
-        green.setColor(Color.GREEN);
-        IntInput blue = new IntInput(2, 128, 8, 1, 1, "Blue   ");
-        blue.setColor(Color.BLUE);
-
         Object[] input = {red, green, blue};
+        red.setValue(prevR);
+        green.setValue(prevG);
+        blue.setValue(prevB);
 
         option = JOptionPane.showConfirmDialog(null, input, "Parameter Input",
                 JOptionPane.OK_CANCEL_OPTION);
 
         if (option == JOptionPane.OK_OPTION) {
-            return new DitheringRecord(red.getValue(), green.getValue(), blue.getValue());
+            prevR = red.getValue();
+            prevG = green.getValue();
+            prevB = blue.getValue();
+            return new DitheringRecord(prevR, prevG, prevB);
         }
         return null;
     }

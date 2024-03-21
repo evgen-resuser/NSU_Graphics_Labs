@@ -6,6 +6,7 @@ import org.evgen.util.ColorUtil;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
 
 public class Ordered implements IFilter {
 
@@ -32,10 +33,12 @@ public class Ordered implements IFilter {
 
         blueShades = new int[blueCoeff];
         initShades(blueShades, blueCoeff);
+
+        System.out.println(Arrays.toString(redShades) + "\n" + Arrays.toString(greenShades) + "\n" + Arrays.toString(blueShades));
     }
 
     private void initShades(int[] palette, int number) {
-        int step = (256 / (number - 1));
+        int step = (256 / (number-1));
         int shade = 0;
         for (int i = 0; i < number; i++) {
             palette[i] = Math.min(shade, 255);
@@ -44,25 +47,25 @@ public class Ordered implements IFilter {
     }
 
     private int findClosest(int[] shades, int color) {
-//        int indx = 0;
-//        int min = 256;
+        int indx = 0;
+        int min = 256;
+
+        for (int i = 0; i < shades.length; i++) {
+            if(Math.abs(shades[i] - color) < min) {
+                min = Math.abs(shades[i] - color);
+                indx = i;
+            }
+        }
+
+//        int step = (256 / (shades.length - 1));
+//        int indx = color / step;
+//        int res;
 //
-//        for (int i = 0; i < shades.length; i++) {
-//            if(Math.abs(shades[i] - color) < min) {
-//                min = Math.abs(shades[i] - color);
-//                indx = i;
-//            }
-//        }
+//        if (indx + 1 < shades.length && (color - shades[indx] > shades[indx+1] - color)) {
+//            res = indx + 1;
+//        } else res = indx;
 
-        int step = (256 / (shades.length - 1));
-        int indx = color / step;
-        int res;
-
-        if (indx + 1 < shades.length && (color - shades[indx] > shades[indx+1] - color)) {
-            res = indx + 1;
-        } else res = indx;
-
-        return shades[res];
+        return shades[indx];
     }
 
     private int getMatrixSize() {
@@ -79,7 +82,7 @@ public class Ordered implements IFilter {
                 break;
             }
         }
-        return res;
+        return 8;
     }
 
     private double[][] calculateMatrix(int size){
@@ -96,12 +99,12 @@ public class Ordered implements IFilter {
         }
         for (int x = len; x < len*2; x++) {
             for (int y = 0; y < len; y++) {
-                newMatrix[x][y] = prevMatrix[x % len][y % len] * 4 + 3;
+                newMatrix[x][y] = prevMatrix[x % len][y % len] * 4 + 2;
             }
         }
         for (int x = 0; x < len; x++) {
             for (int y = len; y < len*2; y++) {
-                newMatrix[x][y] = prevMatrix[x % len][y % len] * 4 + 2;
+                newMatrix[x][y] = prevMatrix[x % len][y % len] * 4 + 3;
             }
         }
         for (int x = len; x < len*2; x++) {
@@ -110,15 +113,16 @@ public class Ordered implements IFilter {
             }
         }
 
-        if (size == matrixSize) {
-            for (int x = 0; x < matrixSize; x++) {
-                for(int y = 0; y < matrixSize; y++) {
-                    newMatrix[x][y] = (newMatrix[x][y] + 1) / (matrixSize*matrixSize);
-                }
+        return newMatrix;
+    }
+
+    private double[][] norm(double[][] matrix) {
+        for (int x = 0; x < matrixSize; x++) {
+            for(int y = 0; y < matrixSize; y++) {
+                matrix[x][y] = (matrix[x][y]) / (matrixSize*matrixSize) - 0.5;
             }
         }
-
-        return newMatrix;
+        return matrix;
     }
 
     @Override
@@ -130,6 +134,7 @@ public class Ordered implements IFilter {
 
         matrixSize = getMatrixSize();
         double[][] bayersMatrix = calculateMatrix(matrixSize);
+        bayersMatrix = norm(bayersMatrix);
 
         initPalettes();
 

@@ -70,8 +70,10 @@ public class Contouring implements IFilter {
                 int green = sobelIteration(pixelsG);
                 int blue = sobelIteration(pixelsB);
 
-                if (red > param && green > param && blue > param) {
-                    newImage.setRGB(x, y, ColorUtil.getColor(255, 255, 255));
+                int lum = (int)(0.299 * red + 0.587 * green + 0.114 * blue);
+
+                if (red > param || green > param || blue > param) {
+                    newImage.setRGB(x, y, ColorUtil.getColor(lum, lum, lum));
                 } else newImage.setRGB(x, y, ColorUtil.getColor(0, 0, 0));
 
             }

@@ -21,6 +21,7 @@ public class MainFrame extends JFrame{
     private final JToolBar toolBar = new JToolBar(SwingConstants.VERTICAL);
     private final WorkPanel workPanel;
     private final ZoomPanel zoomBar;
+    private final WindowHandler windowHandler = new WindowHandler();
 
     public MainFrame() throws IOException{
         this.setVisible(true);
@@ -32,10 +33,10 @@ public class MainFrame extends JFrame{
         InstrumentsHandler instruments = new InstrumentsHandler();
         workPanel = new WorkPanel(instruments, imageScrollPane);
         workPanel.setVisible(true);
-        zoomBar = new ZoomPanel(workPanel);
+        zoomBar = new ZoomPanel(workPanel, windowHandler.getRotateSettingsWindow());
 
         add(imageScrollPane);
-        setJMenuBar(new MenuBar(workPanel, zoomBar));
+        setJMenuBar(new MenuBar(workPanel, zoomBar, windowHandler));
 
         initToolbar();
 
@@ -70,7 +71,6 @@ public class MainFrame extends JFrame{
         toolBar.addSeparator();
 
         initButtons();
-
 
         this.add(toolBar, BorderLayout.WEST);
         this.add(zoomBar, BorderLayout.SOUTH);
@@ -117,7 +117,7 @@ public class MainFrame extends JFrame{
                 IconsHandler.INVERSION, null));
 
         toolBar.add(createButton("Gaussian", "Gaussian blur",
-                IconsHandler.GAUSSIAN, new GaussianSettingsFrame()));
+                IconsHandler.GAUSSIAN, windowHandler.getGaussianSettingsFrame()));
 
         toolBar.add(createButton("Sharpening", "Sharpening tool",
                 IconsHandler.SHARPENING, null));
@@ -126,16 +126,16 @@ public class MainFrame extends JFrame{
                 IconsHandler.EMBOSSING, null));
 
         toolBar.add(createButton("Gamma", "Gamma correction",
-                IconsHandler.GAMMA, new GammaSettingsFrame()));
+                IconsHandler.GAMMA, windowHandler.getGammaSettingsFrame()));
 
         toolBar.add(createButton("FloydSteinberg", "Floyd-Steinberg dithering tool",
-                IconsHandler.DITHERING_ROUND, new DitheringSettingsFrame()));
+                IconsHandler.DITHERING_ROUND, windowHandler.getFsDitheringSettings()));
 
         toolBar.add(createButton("Ordered", "Ordered dithering tool",
-                IconsHandler.DITHERING_SQUARE, new DitheringSettingsFrame()));
+                IconsHandler.DITHERING_SQUARE, windowHandler.getoDitheringSettings()));
 
         toolBar.add(createButton("Contouring", "Contour selection filter",
-                IconsHandler.BORDERS, new ContouringSettings()));
+                IconsHandler.BORDERS, windowHandler.getContouringSettings()));
 
         toolBar.add(createButton("Watercolor", "Watercolor filter",
                 IconsHandler.WATERCOLOR, null));

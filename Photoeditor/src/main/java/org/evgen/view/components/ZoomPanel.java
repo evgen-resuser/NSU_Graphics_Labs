@@ -4,6 +4,7 @@ import org.evgen.util.ButtonMaker;
 import  org.evgen.view.IconsHandler;
 import org.evgen.view.WorkPanel;
 import org.evgen.view.windows.RotateSettingsWindow;
+import org.evgen.view.windows.WindowHandler;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,12 +13,15 @@ public class ZoomPanel extends JToolBar {
 
     private JSlider slider;
     private int type = 2;
+    private final RotateSettingsWindow rotateSettingsWindow;
 
     public void setType(int t) {
         type = t;
     }
 
-    public ZoomPanel(WorkPanel workPanel) {
+    public ZoomPanel(WorkPanel workPanel, RotateSettingsWindow rotateWindow) {
+
+        this.rotateSettingsWindow = rotateWindow;
 
         JButton fitButton = ButtonMaker.initButton("Fit the image to screen size", IconsHandler.FIT);
         fitButton.addActionListener(e -> {
@@ -33,9 +37,11 @@ public class ZoomPanel extends JToolBar {
 
         initSlider(workPanel);
 
+        RotateSettingsWindow window = new RotateSettingsWindow();
+
         JButton rotate = ButtonMaker.initButton("Rotate image", IconsHandler.ROTATE);
         rotate.addActionListener(e -> {
-            int angle = RotateSettingsWindow.showWindow();
+            int angle = window.showWindow();
             if (angle != -1) workPanel.rotatePic(angle);
         });
 

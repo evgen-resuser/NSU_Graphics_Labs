@@ -54,4 +54,9 @@ public class IntInput extends JPanel{
         this.slider.setBackground(color);
     }
 
+    public void setValue(int v) {
+        this.slider.setValue(v);
+        this.spinner.setValue(v);
+    }
+
 }

@@ -6,14 +6,18 @@ import javax.swing.*;
 
 public class RotateSettingsWindow{
 
-    public static int showWindow(){
+    IntInput angle = new IntInput(-180, 180, 0, 10, 1, "Rotate angle (degrees): ");
+    int lastAngle = 0;
 
-        IntInput angle = new IntInput(-180, 180, 0, 10, 1, "Rotate angle (degrees): ");
+    public int showWindow(){
+
+        angle.setValue(lastAngle);
 
         int option = JOptionPane.showConfirmDialog(null, angle, "Parameter Input",
                 JOptionPane.OK_CANCEL_OPTION);
 
         if (option == JOptionPane.OK_OPTION) {
+            lastAngle = angle.getValue();
             return angle.getValue();
         }
         return -1;

@@ -38,4 +38,9 @@ public class DoubleInput extends JPanel{
         return (double) spinner.getValue();
     }
 
+    public void setValue(double v) {
+        slider.setValue((int)(v*10));
+        spinner.setValue(v);
+    }
+
 }

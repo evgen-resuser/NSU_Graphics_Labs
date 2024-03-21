@@ -14,10 +14,12 @@ public class MenuBar extends JMenuBar {
     private final ZoomPanel zoomPanel;
     private final HelpPageFrame helpPageFrame = new HelpPageFrame();
     private final AboutPageFrame aboutPageFrame = new AboutPageFrame();
+    private final WindowHandler windowHandler;
 
-    public MenuBar(WorkPanel workPanel, ZoomPanel zoomPanel) {
+    public MenuBar(WorkPanel workPanel, ZoomPanel zoomPanel, WindowHandler windowHandler) {
         this.workPanel = workPanel;
         this.zoomPanel = zoomPanel;
+        this.windowHandler = windowHandler;
         initButtons();
     }
 
@@ -42,7 +44,7 @@ public class MenuBar extends JMenuBar {
 
         JMenuItem rotate = new JMenuItem("Rotate image");
         rotate.addActionListener(e -> {
-            int angle = RotateSettingsWindow.showWindow();
+            int angle = windowHandler.getRotateSettingsWindow().showWindow();
             workPanel.rotatePic(angle);
         });
         view.add(rotate);
@@ -135,11 +137,16 @@ public class MenuBar extends JMenuBar {
         embossing.addActionListener(e -> workPanel.applyFilter("Embossing"));
         filters.add(embossing);
 
-        filters.add(initEditableFilter("Gaussian Blur", "Gaussian", new GaussianSettingsFrame()));
-        filters.add(initEditableFilter("Gamma Correction", "Gamma", new GammaSettingsFrame()));
-        filters.add(initEditableFilter("Floyd-Steinberg Dithering", "FloydSteinberg", new DitheringSettingsFrame()));
-        filters.add(initEditableFilter("Ordered Dithering", "Ordered", new DitheringSettingsFrame()));
-        filters.add(initEditableFilter("Contouring filter", "Contouring", new ContouringSettings()));
+        filters.add(initEditableFilter("Gaussian Blur", "Gaussian",
+                windowHandler.getGaussianSettingsFrame()));
+        filters.add(initEditableFilter("Gamma Correction", "Gamma",
+                windowHandler.getGammaSettingsFrame()));
+        filters.add(initEditableFilter("Floyd-Steinberg Dithering", "FloydSteinberg",
+                windowHandler.getFsDitheringSettings()));
+        filters.add(initEditableFilter("Ordered Dithering", "Ordered",
+                windowHandler.getoDitheringSettings()));
+        filters.add(initEditableFilter("Contouring filter", "Contouring",
+                windowHandler.getContouringSettings()));
 
         JMenuItem watercolors = new JMenuItem("Watercolor filter");
         watercolors.addActionListener(e -> workPanel.applyFilter("Watercolor"));
