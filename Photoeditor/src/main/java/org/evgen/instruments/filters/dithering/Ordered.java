@@ -69,12 +69,12 @@ public class Ordered implements IFilter {
     }
 
     private int getMatrixSize() {
-        int sizeR = 256 / redCoeff;
-        int sizeG = 256 / greenCoeff;
-        int sizeB = 256 / blueCoeff;
+        int sizeR = 255 / (redCoeff);
+        int sizeG = 255 / (greenCoeff);
+        int sizeB = 255 / (blueCoeff);
         int maxSize = Math.max(Math.max(sizeG, sizeR), sizeB);
 
-        int[] sizes = {2, 4, 8, 16};
+        int[] sizes = {2, 4, 8};
         int res = 0;
         for (int i : sizes) {
             if (maxSize <= i*i) {
@@ -82,13 +82,15 @@ public class Ordered implements IFilter {
                 break;
             }
         }
-        return 8;
+        res = (res == 0) ? 8 : res;
+        System.out.println(res);
+        return res;
     }
 
     private double[][] calculateMatrix(int size){
         if (size == 2) return baseMatrix;
-        double[][] prevMatrix = calculateMatrix(size / 2);
 
+        double[][] prevMatrix = calculateMatrix(size / 2);
         int len = prevMatrix[0].length;
         double[][] newMatrix = new double[2*len][2*len];
 
@@ -119,7 +121,7 @@ public class Ordered implements IFilter {
     private double[][] norm(double[][] matrix) {
         for (int x = 0; x < matrixSize; x++) {
             for(int y = 0; y < matrixSize; y++) {
-                matrix[x][y] = (matrix[x][y]) / (matrixSize*matrixSize) - 0.5;
+                matrix[x][y] = (matrix[x][y]) / (matrixSize*matrixSize);
             }
         }
         return matrix;
@@ -138,12 +140,13 @@ public class Ordered implements IFilter {
 
         initPalettes();
 
-        double stepR = 256.0 / redShades.length;
-        double stepG = 256.0 / greenShades.length;
-        double stepB = 256.0 / blueShades.length;
+        double stepR = 255.0 / (redShades.length - 1);
+        double stepG = 255.0 / (greenShades.length - 1);
+        double stepB = 255.0 / (blueShades.length - 1);
 
         int curColor, red, green, blue, newR, newG, newB;
         double tmp;
+        double r, g, b;
 
         for (int x = 0; x < image.getWidth(); x++) {
             for (int y = 0; y < image.getHeight(); y++) {
@@ -152,11 +155,15 @@ public class Ordered implements IFilter {
                 green = ColorUtil.getGreen(curColor);
                 blue = ColorUtil.getBlue(curColor);
 
-                tmp = bayersMatrix[x % matrixSize][y % matrixSize];
+                tmp = bayersMatrix[y % matrixSize][x % matrixSize] - 0.5;
 
-                newR = findClosest(redShades, (int) (red + stepR * tmp));
-                newG = findClosest(greenShades, (int) (green + stepG * tmp));
-                newB = findClosest(blueShades, (int) (blue + stepB * tmp));
+                r = red + stepR * tmp;
+                g = green + stepG * tmp;
+                b = blue + stepB * tmp;
+
+                newR = findClosest(redShades, (int) (r));
+                newG = findClosest(greenShades, (int) (g));
+                newB = findClosest(blueShades, (int) (b));
 
                 int res = ColorUtil.getColor(newR, newG, newB);
                 result.setRGB(x, y, res);

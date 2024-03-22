@@ -96,8 +96,13 @@ public class Contouring implements IFilter {
     private BufferedImage roberts(BufferedImage image) {
         BufferedImage result = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
 
-        int color1, color2, color3, color4;
-        int res1, res2, res3;
+        int color1;
+        int color2;
+        int color3;
+        int color4;
+        int res1;
+        int res2;
+        int res3;
         for (int x = 0; x < image.getWidth()-1; x++) {
             for (int y = 0; y < image.getHeight()-1; y++) {
 
