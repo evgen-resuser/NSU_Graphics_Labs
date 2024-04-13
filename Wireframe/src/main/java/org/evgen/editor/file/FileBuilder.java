@@ -11,15 +11,17 @@ import java.util.Locale;
 
 public class FileBuilder {
 
+
+
     private FileBuilder(){}
 
     public static void saveFile(String name, BSpline toSave) {
-        try {
-            FileWriter writer = new FileWriter(name);
+        try (FileWriter writer = new FileWriter(name)) {
 
-            writer.write(String.format("n=%d k=%d%n", toSave.getSegmentsNum(), toSave.getControlPoints().size()));
+            writer.write(String.format("n=%d k=%d m=%d m1=%d r=%d z=%d%n",
+                    toSave.getSegmentsNum(), toSave.getControlPoints().size(), 0, 0, 0, 0));
             StringBuilder points = new StringBuilder();
-            int sum = 2;
+            int sum = 6;
 
             DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.US);
             symbols.setDecimalSeparator('.');
@@ -32,7 +34,6 @@ public class FileBuilder {
             writer.write(points.append("\n").toString());
             writer.write(String.valueOf(sum));
 
-            writer.close();
         } catch ( IOException e) {
             System.err.println(e.getMessage());
         }

@@ -5,13 +5,16 @@ import org.evgen.components.SaveScreen;
 import org.evgen.editor.BSpline;
 import org.evgen.editor.file.FileBuilder;
 import org.evgen.editor.file.FileReader;
+import org.evgen.utils.observer.Observer;
+import org.evgen.utils.observer.Subject;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
-public class EditorMainFrame extends JFrame {
+public class EditorMainFrame extends JFrame implements Subject {
 
     private final EditorViewerPanel viewer;
     private final EditorSettingsPanel settings;
@@ -21,15 +24,13 @@ public class EditorMainFrame extends JFrame {
     private BSpline spline;
 
     public EditorMainFrame() {
-        this.setPreferredSize(new Dimension(640, 480));
+        this.setPreferredSize(new Dimension(640, 640));
         this.setMinimumSize(new Dimension(640, 480));
-        this.setVisible(true);
         this.setTitle("Editor");
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setJMenuBar(initMenu());
+        this.pack();
 
-        //load("saves/example.txt");
-        //spline = new BSpline();
         loadExample();
         viewer = new EditorViewerPanel(spline);
         settings = new EditorSettingsPanel(this, spline);
@@ -65,10 +66,6 @@ public class EditorMainFrame extends JFrame {
                     "Error", JOptionPane.ERROR_MESSAGE);
             spline = new BSpline();
         }
-//        spline.createSpline();
-//        viewer.setSpline(spline);
-//        settings.setSpline(spline);
-//        settings.updateSettings(this);
     }
 
     private JMenuBar initMenu() {
@@ -87,5 +84,19 @@ public class EditorMainFrame extends JFrame {
         menuBar.add(file);
 
         return menuBar;
+    }
+
+    private final ArrayList<Observer> observers = new ArrayList<>();
+
+    @Override
+    public void registerObserver(Observer observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void notifyObservers() {
+        for (Observer o : observers) {
+            o.update(spline);
+        }
     }
 }

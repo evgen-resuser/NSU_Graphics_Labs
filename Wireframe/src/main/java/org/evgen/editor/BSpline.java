@@ -8,7 +8,10 @@ import java.util.List;
 
 public class BSpline {
 
-    int segmentsNum = 4;
+    private int segmentsNum = 4;
+    private int pointsCount = 4;
+    private int generatrixCount;
+    private int linesInCircle;
 
     private final Matrix splineMatrix = new Matrix(new double[][]{
                     {-1.0/6, 3.0/6, -3.0/6, 1.0/6},
@@ -95,4 +98,27 @@ public class BSpline {
         return segmentsNum;
     }
 
+    public void setPointsCount(int pointsCount) {
+        this.pointsCount = pointsCount;
+    }
+
+    public int getGeneratrixCount() {
+        return generatrixCount;
+    }
+
+    public void setGeneratrixCount(int generatrixCount) {
+        this.generatrixCount = generatrixCount;
+    }
+
+    public int getLinesInCircle() {
+        return linesInCircle;
+    }
+
+    public void setLinesInCircle(int linesInCircle) {
+        this.linesInCircle = linesInCircle;
+    }
+
+    public int getPointsCount() {
+        return pointsCount;
+    }
 }

@@ -14,15 +14,14 @@ public class EditorViewerPanel extends JPanel implements MouseMotionListener, Mo
     private static final int RADIUS = 15;
     private static final int RADIUS_EXT = 20;
 
-    private double zoomCoeff = 1;
     private int unit = DEFAULT_UNIT_PX;
 
     private int centerX;
     private int centerY;
     private int offsetX;
     private int offsetY;
-    private final JScrollPane scrollPane = new JScrollPane();
-    private int height, width;
+    private int h;
+    private int w;
 
     private BSpline spline;
     private SplinePoint selected;
@@ -32,29 +31,29 @@ public class EditorViewerPanel extends JPanel implements MouseMotionListener, Mo
         this.spline = spline;
         this.setBackground(Color.BLACK);
 
-        height = getHeight();
-        width = getWidth();
-
-        scrollPane.setMaximumSize(new Dimension(width, height));
-        scrollPane.setViewportView(this);
-        scrollPane.revalidate();
-
+        h = getHeight();
+        w = getWidth();
 
         addMouseListener(this);
         addMouseMotionListener(this);
         addMouseWheelListener(this);
+
     }
 
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        centerX = getWidth() / 2 + offsetX;
-        centerY = getHeight() / 2 + offsetY;
+        w = getWidth() + offsetX;
+        h = getHeight() + offsetY;
+
+        centerX = w / 2;
+        centerY = h / 2;
 
         drawAxis(g);
         drawControlPoints(g);
         drawSpline(g);
+
     }
 
     private void drawControlPoints(Graphics g) {
@@ -103,30 +102,25 @@ public class EditorViewerPanel extends JPanel implements MouseMotionListener, Mo
 
     private void drawAxis(Graphics g) {
         if (unit == 0) return;
-//
-//        int height = getHeight() / 2;
-//        int width = getWidth() / 2;
 
         g.setColor(Color.DARK_GRAY);
         ((Graphics2D)g).setStroke(new BasicStroke(1));
-        int linesNumber = centerX / unit;
-        for(int i = 1; i <= linesNumber; i++) {
-            g.drawLine(centerX - unit*i, 0, centerX - unit *i, centerY*2);
-            g.drawLine(centerX + unit*i, 0, centerX + unit *i, centerY*2);
+
+        for (int x = centerX % unit; x < getWidth(); x += unit) {
+            g.drawLine(x, 0, x, getHeight());
         }
 
-        linesNumber = centerY / unit;
-        for(int i = 1; i <= linesNumber; i++) {
-            g.drawLine(0, centerY - unit *i, centerX*2, centerY - unit *i);
-            g.drawLine(0, centerY + unit *i, centerX*2, centerY + unit *i);
+        for (int y = centerY % unit; y < getHeight(); y += unit) {
+            g.drawLine(0, y, getWidth(), y);
         }
 
         ((Graphics2D)g).setStroke(new BasicStroke(2));
         g.setColor(Color.GRAY);
         g.drawString("v", centerX+5, 15);
-        g.drawString("u", centerX*2 - 15, centerY-5);
-        g.drawLine(centerX, 0, centerX, centerY*2);
-        g.drawLine(0, centerY, centerX*2, centerY);
+        g.drawString("u", getWidth() - 15, centerY-5);
+        g.drawLine(centerX, 0, centerX, getHeight());
+        g.drawLine(0, centerY, getWidth(), centerY);
+
     }
 
     private SplinePoint transformPoint(SplinePoint p) {
@@ -182,7 +176,8 @@ public class EditorViewerPanel extends JPanel implements MouseMotionListener, Mo
         repaint();
     }
 
-    int curX, curY;
+    int curX;
+    int curY;
     @Override
     public void mousePressed(MouseEvent e) {
         curX = e.getX();
@@ -193,17 +188,17 @@ public class EditorViewerPanel extends JPanel implements MouseMotionListener, Mo
 
     @Override
     public void mouseReleased(MouseEvent e) {
-
+        //no use
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-
+        //no use
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-
+        //no use
     }
 
     @Override
@@ -214,14 +209,18 @@ public class EditorViewerPanel extends JPanel implements MouseMotionListener, Mo
             spline.updatePoint(selectedIndx, selected);
             spline.createSpline();
         } else {
+            int dx = e.getX() - curX;
+            int dy = e.getY() - curY;
 
+            offsetX += dx / unit;
+            offsetY += dy / unit;
         }
         repaint();
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
-
+        //no use
     }
 
     @Override
