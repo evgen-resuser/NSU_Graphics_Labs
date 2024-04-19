@@ -33,4 +33,10 @@ public class SplinePoint {
                 ", y=" + y +
                 '}';
     }
+
+    public Vector toVector() {
+        return new Vector(
+                x, y, 0, 1
+        );
+    }
 }

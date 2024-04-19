@@ -9,8 +9,11 @@ public class Main {
         WireframeViewerMainFrame viewer = new WireframeViewerMainFrame(editor);
 
         editor.registerObserver(viewer);
+        editor.notifyObservers();
 
         viewer.setVisible(true);
+        editor.setLocation(viewer.getWidth() + 20, 0);
+
         editor.setVisible(true);
     }
 }

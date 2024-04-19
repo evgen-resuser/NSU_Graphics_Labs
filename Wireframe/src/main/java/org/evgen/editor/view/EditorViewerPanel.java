@@ -103,7 +103,7 @@ public class EditorViewerPanel extends JPanel implements MouseMotionListener, Mo
     private void drawAxis(Graphics g) {
         if (unit == 0) return;
 
-        g.setColor(Color.DARK_GRAY);
+        g.setColor(new Color(35, 35, 35));
         ((Graphics2D)g).setStroke(new BasicStroke(1));
 
         for (int x = centerX % unit; x < getWidth(); x += unit) {

@@ -69,7 +69,6 @@ public class FileReader {
         }
 
         result.setSegmentsNum(map.get("n"));
-        result.setPointsCount(map.get("k"));
         result.setGeneratrixCount(map.get("m"));
         result.setLinesInCircle(map.get("m1"));
 

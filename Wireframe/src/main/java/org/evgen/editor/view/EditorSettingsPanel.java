@@ -13,8 +13,6 @@ public class EditorSettingsPanel extends JPanel {
 
     private final IntInput segmentsCountInput = new IntInput(1, 10, 4, 1, 1,
             "Segments count (N):");
-    private final IntInput controlPointsCount = new IntInput(4, 20, 4, 1, 1,
-            "Control points count (K):");
     private final IntInput generatrixInput = new IntInput(2, 20, 2, 1, 1,
             "Generatrix count (M):");
     private final IntInput linesInCircleCount = new IntInput(1, 12, 3, 1, 1,
@@ -33,18 +31,13 @@ public class EditorSettingsPanel extends JPanel {
             spline.setSegmentsNum(segmentsCountInput.getValue());
             spline.createSpline();
             mainFrame.repaint();
-        });
-
-        slidersPanel.add(controlPointsCount);
-        this.controlPointsCount.addListener( e -> {
-            spline.setPointsCount(controlPointsCount.getValue());
-            spline.createSpline();
-            mainFrame.repaint();
+            mainFrame.notifyObservers();
         });
 
         slidersPanel.add(generatrixInput);
         this.generatrixInput.addListener( e -> {
-
+            spline.setGeneratrixCount(generatrixInput.getValue());
+            mainFrame.notifyObservers();
         });
 
         slidersPanel.add(linesInCircleCount);
@@ -77,7 +70,6 @@ public class EditorSettingsPanel extends JPanel {
 
     public void updateSettings(EditorMainFrame frame) {
         segmentsCountInput.setValue(spline.getSegmentsNum());
-        controlPointsCount.setValue(spline.getPointsCount());
         generatrixInput.setValue(spline.getGeneratrixCount());
         linesInCircleCount.setValue(spline.getLinesInCircle());
         frame.repaint();

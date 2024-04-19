@@ -11,13 +11,10 @@ public class WireframeViewerMainFrame extends JFrame implements Observer {
 
     private BSpline spline;
 
-    private int generatrixCount;
-    private int linesInCircle;
-
     private final WireframeViewerPanel viewerPanel;
 
     public WireframeViewerMainFrame(EditorMainFrame editor) {
-        this.viewerPanel = new WireframeViewerPanel();
+        this.viewerPanel = new WireframeViewerPanel(spline);
         this.setTitle("Wireframe");
 
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -31,8 +28,8 @@ public class WireframeViewerMainFrame extends JFrame implements Observer {
     @Override
     public void update(Object message) {
         this.spline = (BSpline)message;
-        this.generatrixCount = spline.getGeneratrixCount();
-        this.linesInCircle = spline.getLinesInCircle();
+        this.viewerPanel.setSpline(spline);
+        viewerPanel.repaint();
     }
 
 }

@@ -1,5 +1,6 @@
 package org.evgen.editor;
 
+import lombok.Getter;
 import org.evgen.utils.SplinePoint;
 import org.evgen.utils.Matrix;
 
@@ -8,8 +9,10 @@ import java.util.List;
 
 public class BSpline {
 
+    @Getter
     private int segmentsNum = 4;
     private int pointsCount = 4;
+    @Getter
     private int generatrixCount;
     private int linesInCircle;
 
@@ -19,6 +22,7 @@ public class BSpline {
                     {-3.0/6, 0, 3.0/6, 0},
                     {1.0/6, 4.0/6, 1.0/6, 0}
             });
+
     private final List<SplinePoint> controlPoints = new ArrayList<>();
     private ArrayList<SplinePoint> splinePoints;
 
@@ -54,7 +58,7 @@ public class BSpline {
 
             // MG * T
             double t;
-            for (int j = 0; j < segmentsNum; j++){
+            for (int j = 0; j <= segmentsNum; j++){
                 t = j * step;
                 x = t*t*t * xVec[0] + t*t * xVec[1] + t * xVec[2] + xVec[3];
                 y = t*t*t * yVec[0] + t*t * yVec[1] + t * yVec[2] + yVec[3];
@@ -91,19 +95,10 @@ public class BSpline {
     public void updatePoint(int i, SplinePoint point) {
         if (i < 0 || i > controlPoints.size()) return;
         controlPoints.set(i, point);
-        //System.out.println(controlPoints.get(i).toString());
-    }
-
-    public int getSegmentsNum() {
-        return segmentsNum;
     }
 
     public void setPointsCount(int pointsCount) {
         this.pointsCount = pointsCount;
-    }
-
-    public int getGeneratrixCount() {
-        return generatrixCount;
     }
 
     public void setGeneratrixCount(int generatrixCount) {

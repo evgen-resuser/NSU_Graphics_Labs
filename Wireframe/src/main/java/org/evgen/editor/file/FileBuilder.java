@@ -11,15 +11,13 @@ import java.util.Locale;
 
 public class FileBuilder {
 
-
-
     private FileBuilder(){}
 
     public static void saveFile(String name, BSpline toSave) {
         try (FileWriter writer = new FileWriter(name)) {
 
-            writer.write(String.format("n=%d k=%d m=%d m1=%d r=%d z=%d%n",
-                    toSave.getSegmentsNum(), toSave.getControlPoints().size(), 0, 0, 0, 0));
+            writer.write(String.format("n=%d m=%d m1=%d r=%d z=%d%n",
+                    toSave.getSegmentsNum(), 0, 0, 0, 0));
             StringBuilder points = new StringBuilder();
             int sum = 6;
 

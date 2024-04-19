@@ -12,9 +12,10 @@ public class Vector {
 
     public void normalize() {
         double tmp = Math.sqrt(x*x + y*y + z*z);
-        x /= tmp;
-        y /= tmp;
-        z /= tmp;
+        x /= w;
+        y /= w;
+        z /= w;
+        w = 1;
     }
 
     public double getX() {

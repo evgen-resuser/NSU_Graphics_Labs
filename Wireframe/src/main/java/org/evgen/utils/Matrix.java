@@ -16,6 +16,18 @@ public class Matrix {
         }
     }
 
+    public Matrix(Matrix other) {
+        this.w = other.w;
+        this.h = other.h;
+        this.data = new double[h][w];
+
+        for(int i = 0; i < w; i++) {
+            for(int j = 0; j < h; j++){
+                data[i][j] = other.data[i][j];
+            }
+        }
+    }
+
     public Vector mulByVector (Vector v) {
         double[] pointArr = new double[]{v.getX(), v.getY(), v.getZ(), v.getW()};
         double[] result = new double[4];
