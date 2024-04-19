@@ -9,78 +9,78 @@ import org.evgen.utils.SplinePoint;
 import org.evgen.utils.Vector;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Getter
 @Setter
 public class Wireframe {
 
-    private Matrix rotationMatrix;
+    private static final int DEFAULT_X_ANGLE = 0;
+    private static final int DEFAULT_Y_ANGLE = 90;
+    private static final int DEFAULT_Z_ANGLE = 0;
+
     private Matrix cameraTranslateMatrix;
-    private Matrix cameraPerspectiveMatrix;
-    private Matrix translateMatrix;
     private Matrix normalizeMatrix;
 
     private List<Vector> wireframePoints;
     private List<Integer> edges;
 
-    private double nearClip = 5.0; //for zoom
-    private double r = 0;
-    private double zoom = 5;
-
     public Wireframe(){
-
-        this.rotationMatrix = new Matrix(new double[][]{
-                {1, 0, 0, 0},
-                {0, 0.5, -0.83, 0},
-                {0, -0.83, 0.5, 0},
-                {0, 0, 0, 1.0}
-        });
-
-        this.translateMatrix = new Matrix(new double[][]{
-                {1.0, 0, 0, 0},
-                {0, 1.0, 0, 0},
-                {0, 0, 1.0, 0},
-                {0, 0, 0, 1.0}
-        });
-
         this.cameraTranslateMatrix = new Matrix(new double[][]{
                 {1, 0, 0, 0},
                 {0, 1, 0, 0},
-                {0, 0, 1, zoom},
+                {0, 0, 1, 20},
                 {0, 0, 0, 1}
-        });
-
-        cameraPerspectiveMatrix = new Matrix(new double[][]{ //sh = sw = d = 1
-                {2 * nearClip, 0, 0, 0},
-                {0, 2 * nearClip, 0, 0},
-                {0, 0, 1.0, 0},
-                {0, 0, 1.0, 0}
         });
     }
 
+    public void incZf(int v){
+        if (zf + v < 0)
+            return;
+        zf += v;
+    }
+
+    private double xAngle = DEFAULT_X_ANGLE;
+    private double yAngle = DEFAULT_Y_ANGLE;
+    private double zAngle = DEFAULT_Z_ANGLE;
+    private double zf = 16;
+    private double zb = 100;
+    Matrix resultMatrix;
+    Matrix sum = MatrixUtils.getRotatedY(Math.toRadians(90));
+
     public void createWireframePoints(BSpline spline) {
         wireframePoints = new ArrayList<>();
-        //translateMatrix = rotationMatrix.mulByMatrix(translateMatrix);
-        //cameraTranslateMatrix = translateMatrix.mulByMatrix(cameraTranslateMatrix);
 
-        int tmp = spline.getGeneratrixCount();
+        int m = spline.getGeneratrixCount();
 
-        double angle = 360.0 / tmp;
+        Matrix mProj = MatrixUtils.getMproj(8, 8, zf, zb);
+
+        resultMatrix = mProj
+                .mulByMatrix(cameraTranslateMatrix)
+                .mulByMatrix(sum)
+        ;
+
+        double angle = 360.0 / m;
         double curAngle, cos, sin;
         List<SplinePoint> splinePoints = spline.getSplinePoints();
 
-        for (int i = 0; i < tmp; i++) {
+        for (int i = 0; i < m; i++) {
             curAngle = angle * i;
-            sin = Math.sin(degToRad(curAngle));
-            cos = Math.cos(degToRad(curAngle));
+            sin = Math.sin(Math.toRadians(curAngle));
+            cos = Math.cos(Math.toRadians(curAngle));
 
             for (SplinePoint p : splinePoints) {
-                wireframePoints.add(new Vector(p.getY()*cos, p.getY()*sin, p.getX(), 1));
+
+                Vector point = new Vector(p.getY()*cos, p.getY()*sin, p.getX(), 1);
+                point = resultMatrix.mulByVector(point);
+
+                wireframePoints.add(point);
             }
+
         }
+
+        setNormalizeMatrix();
+
     }
 
     private void setNormalizeMatrix()
@@ -121,66 +121,5 @@ public class Wireframe {
                 {0, 0, 0, 1.0}
         });
     }
-
-    private double degToRad(double deg) {
-        return deg * 3.14 / 180;
-    }
-
-    public Map<Integer, List<SplinePoint>> getCube()
-    {
-        List<Vector> cubePoints = new ArrayList<>();
-        cubePoints.add(new Vector(1.0, 1.0, 1.0, 1.0));
-        cubePoints.add(new Vector(1.0, 1.0, -1.0, 1.0));
-        cubePoints.add(new Vector(1.0, -1.0, 1.0, 1.0));
-        cubePoints.add(new Vector(1.0, -1.0, -1.0, 1.0));
-        cubePoints.add(new Vector(-1.0, 1.0, 1.0, 1.0));
-        cubePoints.add(new Vector(-1.0, 1.0, -1.0, 1.0));
-        cubePoints.add(new Vector(-1.0, -1.0, 1.0, 1.0));
-        cubePoints.add(new Vector(-1.0, -1.0, -1.0, 1.0));
-
-        wireframePoints = new ArrayList<>(cubePoints);
-        setNormalizeMatrix();
-
-        translateMatrix = MatrixUtils.getRotatedX(30)
-                .mulByMatrix(normalizeMatrix)
-        ;
-
-        List<SplinePoint> wireframePoints = new ArrayList<>();
-        for (Vector v : cubePoints)
-        {
-            Vector planePoint;
-
-            planePoint = translateMatrix.mulByVector(v);
-
-            wireframePoints.add(new SplinePoint(planePoint.getX(), planePoint.getY()));
-        }
-
-        List<SplinePoint> edges = new ArrayList<>();
-        for (int i = 0; i < cubePoints.size(); i++)
-        {
-            for (int j = i + 1; j < cubePoints.size(); j++)
-            {
-                int diff = 0;
-                if (Math.abs(cubePoints.get(i).getX() - cubePoints.get(j).getX()) == 2)
-                    diff++;
-                if (Math.abs(cubePoints.get(i).getY() - cubePoints.get(j).getY()) == 2)
-                    diff++;
-                if (Math.abs(cubePoints.get(i).getZ() - cubePoints.get(j).getZ()) == 2)
-                    diff++;
-
-                if (diff == 1)
-                    edges.add(new SplinePoint(i, j));
-            }
-        }
-
-        Map<Integer, List<SplinePoint>> cube = new HashMap<>();
-        cube.put(0, wireframePoints);
-        cube.put(1, edges);
-
-        return cube;
-    }
-
-
-
 
 }

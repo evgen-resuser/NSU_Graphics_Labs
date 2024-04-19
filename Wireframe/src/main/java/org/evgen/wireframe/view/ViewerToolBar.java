@@ -6,7 +6,7 @@ import javax.swing.*;
 
 public class ViewerToolBar extends JToolBar {
 
-    public ViewerToolBar(WireframeViewerMainFrame main, EditorMainFrame editorMainFrame) {
+    public ViewerToolBar(WireframeViewerPanel viewerPanel, EditorMainFrame editorMainFrame) {
 
         JButton editorButton = new JButton("EDIT");
         editorButton.addActionListener( e -> editorMainFrame.setVisible(!editorMainFrame.isVisible()));
@@ -23,6 +23,7 @@ public class ViewerToolBar extends JToolBar {
         this.addSeparator();
 
         JButton reset = new JButton("RESET");
+        reset.addActionListener( e-> viewerPanel.resetRotate());
         this.add(reset);
 
     }

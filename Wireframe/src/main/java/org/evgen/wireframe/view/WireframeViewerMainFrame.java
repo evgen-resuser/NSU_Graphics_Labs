@@ -20,7 +20,7 @@ public class WireframeViewerMainFrame extends JFrame implements Observer {
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setMinimumSize(new Dimension(640, 480));
         this.setPreferredSize(new Dimension(750, 550));
-        this.add(new ViewerToolBar(this, editor), BorderLayout.NORTH);
+        this.add(new ViewerToolBar(viewerPanel, editor), BorderLayout.NORTH);
         this.add(viewerPanel, BorderLayout.CENTER);
         this.pack();
     }

@@ -49,4 +49,9 @@ public class Vector {
     public void setW(double w) {
         this.w = w;
     }
+
+    @Override
+    public String toString() {
+        return x + " " + y + " " + z + " " + w;
+    }
 }

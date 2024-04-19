@@ -1,7 +1,5 @@
 package org.evgen.utils;
 
-import java.util.List;
-
 public class MatrixUtils {
 
     private MatrixUtils(){}
@@ -60,44 +58,4 @@ public class MatrixUtils {
         }
         );
     }
-
-    public static Matrix setNormalizeMatrix(List<Vector> wireframePoints) {
-
-        double maxX = wireframePoints.get(0).getX(), minX = wireframePoints.get(0).getX();
-        double maxY = wireframePoints.get(0).getY(), minY = wireframePoints.get(0).getY();
-        double maxZ = wireframePoints.get(0).getZ(), minZ = wireframePoints.get(0).getZ();
-
-        for(Vector v : wireframePoints)
-        {
-            if(v.getX() > maxX)
-                maxX = v.getX();
-            if(v.getY() > maxY)
-                maxY = v.getY();
-            if(v.getZ() > maxZ)
-                maxZ = v.getZ();
-
-            if(v.getX() < minX)
-                minX = v.getX();
-            if(v.getY() < minY)
-                minY = v.getY();
-            if(v.getZ() < minZ)
-                minZ = v.getZ();
-        }
-
-        double distX = maxX - minX;
-        double distY = maxY - minY;
-        double distZ = maxZ - minZ;
-
-        double res = Math.max(distX, Math.max(distY, distZ));
-        if(res == 0.0)
-            res = 1.0;
-
-        return new Matrix(new double[][]{
-                {1.0/res, 0, 0, 0},
-                {0, 1.0/res, 0, 0},
-                {0, 0, 1.0/res, 0},
-                {0, 0, 0, 1.0}
-        });
-    }
-
 }
