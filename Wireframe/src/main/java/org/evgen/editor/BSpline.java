@@ -1,20 +1,26 @@
 package org.evgen.editor;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.evgen.utils.SplinePoint;
 import org.evgen.utils.Matrix;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
+@Setter
 public class BSpline {
 
-    @Getter
     private int segmentsNum = 4;
     private int pointsCount = 4;
-    @Getter
     private int generatrixCount;
     private int linesInCircle;
+
+    private double x;
+    private double y;
+    private double z;
+    private double zf;
 
     private final Matrix splineMatrix = new Matrix(new double[][]{
                     {-1.0/6, 3.0/6, -3.0/6, 1.0/6},
@@ -80,40 +86,9 @@ public class BSpline {
         controlPoints.remove(controlPoints.size() - 1);
     }
 
-    public List<SplinePoint> getControlPoints() {
-        return controlPoints;
-    }
-
-    public List<SplinePoint> getSplinePoints() {
-        return splinePoints;
-    }
-
-    public void setSegmentsNum(int segmentsNum) {
-        this.segmentsNum = segmentsNum;
-    }
-
     public void updatePoint(int i, SplinePoint point) {
         if (i < 0 || i > controlPoints.size()) return;
         controlPoints.set(i, point);
     }
 
-    public void setPointsCount(int pointsCount) {
-        this.pointsCount = pointsCount;
-    }
-
-    public void setGeneratrixCount(int generatrixCount) {
-        this.generatrixCount = generatrixCount;
-    }
-
-    public int getLinesInCircle() {
-        return linesInCircle;
-    }
-
-    public void setLinesInCircle(int linesInCircle) {
-        this.linesInCircle = linesInCircle;
-    }
-
-    public int getPointsCount() {
-        return pointsCount;
-    }
 }

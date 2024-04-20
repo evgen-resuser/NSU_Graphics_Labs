@@ -1,7 +1,5 @@
 package org.evgen.utils;
 
-import java.awt.*;
-
 public class SplinePoint {
     private double x, y;
 

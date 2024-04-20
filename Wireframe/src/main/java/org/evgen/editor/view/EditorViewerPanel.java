@@ -84,7 +84,7 @@ public class EditorViewerPanel extends JPanel implements MouseMotionListener, Mo
 
     private void drawSpline(Graphics g) {
         List<SplinePoint> points = spline.getSplinePoints();
-        if (points == null || points.size() < 4) {
+        if (points == null) {
             return;
         }
 
@@ -169,6 +169,8 @@ public class EditorViewerPanel extends JPanel implements MouseMotionListener, Mo
         if(e.getButton() == MouseEvent.BUTTON3) {
             selected = null;
             selectedIndx = -1;
+
+            if (spline.getControlPoints().size() <= 4) return;
             spline.deleteDot();
         }
 

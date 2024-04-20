@@ -9,6 +9,7 @@ import org.evgen.wireframe.Wireframe;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 
 public class WireframeViewerPanel extends JPanel implements MouseListener, MouseMotionListener, MouseWheelListener {
 
@@ -33,12 +34,18 @@ public class WireframeViewerPanel extends JPanel implements MouseListener, Mouse
     public void setSpline(BSpline spline) {
         this.spline = spline;
         this.wireframe = new Wireframe();
+        //wireframe.initSum(spline.getX(), spline.getY(), spline.getZ());
+        //wireframe.setZf(spline.getZf());
+        //System.out.println("set: " + spline.getGeneratrixCount());
+        repaint();
 
         addMouseListener(this);
         addMouseMotionListener(this);
         addMouseWheelListener(this);
     }
 
+    int centerX;
+    int centerY;
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -46,12 +53,16 @@ public class WireframeViewerPanel extends JPanel implements MouseListener, Mouse
         Graphics2D g2d = (Graphics2D) g;
         g2d.setStroke(new BasicStroke(2));
 
+        //System.out.println(spline.getGeneratrixCount());
+
         //paint wireframe
 
-        int centerX = getWidth()/2;
-        int centerY = getHeight()/2;
+        centerX = getWidth()/2;
+        centerY = getHeight()/2;
 
         wireframe.createWireframePoints(spline);
+
+        double med = (wireframe.getZMax() + wireframe.getZMin()) / 2 ;
 
         int n = spline.getSplinePoints().size();
 
@@ -61,15 +72,37 @@ public class WireframeViewerPanel extends JPanel implements MouseListener, Mouse
                 Vector p1 = wireframe.getWireframePoints().get(j * n + i);
                 Vector p2 = wireframe.getWireframePoints().get(j * n + i+1);
 
-                g.drawLine(
-                        (int)p1.getX() + centerX, (int)p1.getY() + centerY,
-                        (int)p2.getX() + centerX, (int)p2.getY() + centerY
-                );
+                draw(g, p1, p2, Color.BLACK);
+
+//                if (p1.getZ() <= med)
+//                    draw(g, p1, p2, Color.GRAY);
+//                else
+//                    draw(g, p1, p2, Color.BLACK);
+
             }
         }
 
+        ArrayList<ArrayList<Vector>> circles = wireframe.getCircles();
+
+        for (int i =0; i < circles.size(); ++i) {
+            for (int j = 0; j < circles.get(i).size() - 1; j++){
+                Vector p1 = circles.get(i).get(j);
+                Vector p2 = circles.get(i).get(j + 1);
+                draw(g, p1, p2, Color.BLACK);
+            }
+        }
+
+
         printAxisHint(g);
 
+    }
+
+    private void draw(Graphics g, Vector p1, Vector p2, Color color) {
+        g.setColor(color);
+        g.drawLine(
+                (int)p1.getX() + centerX, (int)p1.getY() + centerY,
+                (int)p2.getX() + centerX, (int)p2.getY() + centerY
+        );
     }
 
     private void printAxisHint(Graphics g) {
@@ -86,7 +119,12 @@ public class WireframeViewerPanel extends JPanel implements MouseListener, Mouse
     }
 
     public void resetRotate() {
+        wireframe.setZf(100);
         wireframe.setSum(MatrixUtils.getRotatedY(Math.toRadians(90)));
+        spline.setX(0);
+        spline.setY(Math.toRadians(90));
+        spline.setZ(0);
+        spline.setZf(100);
         repaint();
     }
 
@@ -130,8 +168,11 @@ public class WireframeViewerPanel extends JPanel implements MouseListener, Mouse
         }
 
         wireframe.setXAngle(dy * 2.0 / 3);
+        spline.setX(dy * 2.0 / 3);
         wireframe.setYAngle(-dx * 2.0 / 3);
+        spline.setY(-dx * 2.0 / 3);
         wireframe.setZAngle(dz * 2.0 / 3);
+        spline.setZ(dz * 2.0 / 3);
 
         Matrix rox = MatrixUtils.getRotatedX(Math.toRadians((dy)) * 2 / 3);
         Matrix roy = MatrixUtils.getRotatedY(Math.toRadians((-dx)) * 2 / 3);
@@ -151,6 +192,7 @@ public class WireframeViewerPanel extends JPanel implements MouseListener, Mouse
     public void mouseWheelMoved(MouseWheelEvent e) {
         int coeff = e.getWheelRotation();
         wireframe.incZf(coeff);
+        spline.setZf(wireframe.getZf());
         repaint();
     }
 }

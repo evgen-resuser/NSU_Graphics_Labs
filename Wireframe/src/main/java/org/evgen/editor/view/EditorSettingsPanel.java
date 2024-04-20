@@ -24,7 +24,7 @@ public class EditorSettingsPanel extends JPanel {
         int h = (int) (mainFrame.getHeight() * 0.25);
         this.setPreferredSize(new Dimension(0, h));
 
-        JPanel slidersPanel = new JPanel();
+        JPanel slidersPanel = new JPanel(); //todo при открытии из файла ничо не меняется, сбрасываются углы
 
         slidersPanel.add(segmentsCountInput);
         this.segmentsCountInput.addListener( e -> {
@@ -42,7 +42,8 @@ public class EditorSettingsPanel extends JPanel {
 
         slidersPanel.add(linesInCircleCount);
         this.linesInCircleCount.addListener( e -> {
-
+            spline.setLinesInCircle(generatrixInput.getValue());
+            mainFrame.notifyObservers();
         });
 
         slidersPanel.setLayout(new BoxLayout(slidersPanel, BoxLayout.Y_AXIS));

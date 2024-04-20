@@ -1,5 +1,8 @@
 package org.evgen.wireframe.view;
 
+import org.evgen.components.OpenScreen;
+import org.evgen.components.SaveScreen;
+import org.evgen.editor.file.FileBuilder;
 import org.evgen.editor.view.EditorMainFrame;
 
 import javax.swing.*;
@@ -15,9 +18,11 @@ public class ViewerToolBar extends JToolBar {
         this.addSeparator();
 
         JButton open = new JButton("OPEN");
+        open.addActionListener( e -> editorMainFrame.load(OpenScreen.openFile()));
         this.add(open);
 
         JButton save = new JButton("SAVE");
+        save.addActionListener( e -> FileBuilder.saveFile(SaveScreen.saveFile(), editorMainFrame.getSpline()));
         this.add(save);
 
         this.addSeparator();

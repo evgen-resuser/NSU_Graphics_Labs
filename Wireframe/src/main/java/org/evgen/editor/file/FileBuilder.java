@@ -16,14 +16,20 @@ public class FileBuilder {
     public static void saveFile(String name, BSpline toSave) {
         try (FileWriter writer = new FileWriter(name)) {
 
-            writer.write(String.format("n=%d m=%d m1=%d r=%d z=%d%n",
-                    toSave.getSegmentsNum(), 0, 0, 0, 0));
-            StringBuilder points = new StringBuilder();
-            int sum = 6;
-
             DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.US);
             symbols.setDecimalSeparator('.');
             DecimalFormat decimalFormat = new DecimalFormat("#.##", symbols);
+
+            writer.write(String.format("n=%d m=%d m1=%d x=%s y=%s z=%s zf=%s%n",
+                    toSave.getSegmentsNum(), toSave.getGeneratrixCount(), toSave.getLinesInCircle(),
+                    String.format("%s", decimalFormat.format(toSave.getX())),
+                    String.format("%s", decimalFormat.format(toSave.getY())),
+                    String.format("%s", decimalFormat.format(toSave.getZ())),
+                    String.format("%s", decimalFormat.format(toSave.getZf()))
+            ));
+            StringBuilder points = new StringBuilder();
+            int sum = 7;
+
             for (SplinePoint p : toSave.getControlPoints()) {
                 points.append(String.format("%s;%s ", decimalFormat.format(p.getX()),
                         decimalFormat.format(p.getY())));

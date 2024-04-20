@@ -19,17 +19,30 @@ public class Wireframe {
     private static final int DEFAULT_Y_ANGLE = 90;
     private static final int DEFAULT_Z_ANGLE = 0;
 
+    private double xAngle = DEFAULT_X_ANGLE;
+    private double yAngle = DEFAULT_Y_ANGLE;
+    private double zAngle = DEFAULT_Z_ANGLE;
+    private double zf = 100;
+    private double zb = 200;
+    Matrix resultMatrix;
+    Matrix sum = MatrixUtils.getRotatedY(Math.toRadians(90));
+
+    private double zMax = -1000;
+    private double zMin = 1000;
+
     private Matrix cameraTranslateMatrix;
     private Matrix normalizeMatrix;
 
     private List<Vector> wireframePoints;
     private List<Integer> edges;
 
+    int circleM = 10;
+
     public Wireframe(){
         this.cameraTranslateMatrix = new Matrix(new double[][]{
                 {1, 0, 0, 0},
                 {0, 1, 0, 0},
-                {0, 0, 1, 20},
+                {0, 0, 1, zf},
                 {0, 0, 0, 1}
         });
     }
@@ -40,16 +53,12 @@ public class Wireframe {
         zf += v;
     }
 
-    private double xAngle = DEFAULT_X_ANGLE;
-    private double yAngle = DEFAULT_Y_ANGLE;
-    private double zAngle = DEFAULT_Z_ANGLE;
-    private double zf = 16;
-    private double zb = 100;
-    Matrix resultMatrix;
-    Matrix sum = MatrixUtils.getRotatedY(Math.toRadians(90));
+    ArrayList<ArrayList<Vector>> circles;
+    double angle;
 
     public void createWireframePoints(BSpline spline) {
         wireframePoints = new ArrayList<>();
+        edges = new ArrayList<>();
 
         int m = spline.getGeneratrixCount();
 
@@ -60,7 +69,7 @@ public class Wireframe {
                 .mulByMatrix(sum)
         ;
 
-        double angle = 360.0 / m;
+        angle = 360.0 / m;
         double curAngle, cos, sin;
         List<SplinePoint> splinePoints = spline.getSplinePoints();
 
@@ -73,14 +82,43 @@ public class Wireframe {
 
                 Vector point = new Vector(p.getY()*cos, p.getY()*sin, p.getX(), 1);
                 point = resultMatrix.mulByVector(point);
+                point.normalize();
+
+                zMax = Math.max(zMax, point.getZ());
+                zMin = Math.min(zMin, point.getZ());
 
                 wireframePoints.add(point);
             }
 
         }
 
-        setNormalizeMatrix();
+        //circles
 
+        angle = 360.0 / (spline.getLinesInCircle() * spline.getGeneratrixCount());
+        circles = new ArrayList<>();
+        for (int i = 0; i < splinePoints.size(); i++) {
+            ArrayList<Vector> circle = new ArrayList<>();
+            circles.add(circle);
+        }
+
+        for (int i = 0; i < spline.getLinesInCircle() * spline.getGeneratrixCount() + 1; i++) {
+            curAngle = angle * i;
+            sin = Math.sin(Math.toRadians(curAngle));
+            cos = Math.cos(Math.toRadians(curAngle));
+
+            for (int j = 0; j < splinePoints.size(); j++) {
+
+                SplinePoint p = splinePoints.get(j);
+                Vector point = new Vector(p.getY()*cos, p.getY()*sin, p.getX(), 1);
+                point = resultMatrix.mulByVector(point);
+                point.normalize();
+
+                zMax = Math.max(zMax, point.getZ());
+                zMin = Math.min(zMin, point.getZ());
+
+                circles.get(j).add(point);
+            }
+        }
     }
 
     private void setNormalizeMatrix()
@@ -120,6 +158,13 @@ public class Wireframe {
                 {0, 0, 1.0/res, 0},
                 {0, 0, 0, 1.0}
         });
+    }
+
+    public void initSum(double x, double y, double z) {
+        Matrix rox = MatrixUtils.getRotatedX(Math.toRadians(x));
+        Matrix roy = MatrixUtils.getRotatedY(Math.toRadians(y));
+        Matrix roz = MatrixUtils.getRotatedZ(Math.toRadians(z));
+        sum = (rox.mulByMatrix(roy).mulByMatrix(roz).mulByMatrix(sum));
     }
 
 }
